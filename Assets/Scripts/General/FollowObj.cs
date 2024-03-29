@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FollowObj : MonoBehaviour
+{
+    public Vector2 offset;
+    public Transform Target;
+    public void Update()
+    {
+        transform.position = Target.position + (Vector3)offset;
+
+    }
+}
