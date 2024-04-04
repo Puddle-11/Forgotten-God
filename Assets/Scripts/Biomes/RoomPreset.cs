@@ -22,7 +22,7 @@ public class RoomPreset : ScriptableObject
     public float hillMagnitude;
     public float hillHeight;
     public float edgeHillFalloff;
-
+    public int islandGenerationCheckDistance;
 
     [Space]
     [Space]
