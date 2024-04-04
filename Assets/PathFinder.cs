@@ -15,7 +15,7 @@ public class PathFinder : MonoBehaviour
     [SerializeField] private Tilemap DisplayMap;
     [SerializeField] private TileBase DisplayTile;
     [SerializeField] private TileBase DisplayTile2;
-
+    private Vector2Int finalPosition;
     [SerializeField] private float speed;
     [SerializeField] private int jumpHeight;
     [SerializeField] private int[] jumpDistanceMatrix;
@@ -32,16 +32,24 @@ public class PathFinder : MonoBehaviour
     private void Start()
     {
         Vector2Int temp = new Vector2Int();
-        currentPos = (Vector2Int)MainMap.WorldToCell(StartingPosTrans.position);
       
     }
     private void Update()
     {
         if (StartFind)
         {
-            StartCoroutine(FindNextPath(false));
+            StartFindAlgorithm();
             StartFind = false;
         }
+
+
+    }
+    private void StartFindAlgorithm()
+    {
+        PreviousPath.Clear();
+        currentPos = (Vector2Int)MainMap.WorldToCell(StartingPosTrans.position);
+            finalPosition = new Vector2Int(-10000, 0);
+            StartCoroutine(FindNextPath(false));
 
     }
     public IEnumerator FindNextPath(bool _breakPoint)
@@ -49,6 +57,7 @@ public class PathFinder : MonoBehaviour
         yield return new WaitForSeconds(speed);
         Vector2Int nextPos = currentPos;
         bool grounded = MainMap.GetTile(new Vector3Int(currentPos.x, currentPos.y - 1, 0)) == GroundTile ? true : false;
+        bool Finish = false;
          BreakPoint = false;
 
 
@@ -63,18 +72,15 @@ public class PathFinder : MonoBehaviour
 
         if (fallRes.z == 0)
         {
-            Debug.Log("Fell");
             nextPos = (Vector2Int)fallRes;
         }
         else if (walkRes.z == 0)
         {
-            Debug.Log("Walked");
 
             nextPos = (Vector2Int)walkRes;
         }
         else if (jumpRes.z == 0 && _breakPoint == false)
         {
-            Debug.Log("Jumped");
             nextPos = (Vector2Int)jumpRes;
             bool contains = false;
             for (int i = 0; i < deactiveBreakpoints.Count; i++)
@@ -92,7 +98,6 @@ public class PathFinder : MonoBehaviour
         }
         else if (overrideWalkRes.z == 0)
         {
-            Debug.Log("OverrideWalk");
 
             nextPos = (Vector2Int)overrideWalkRes;
         }
@@ -108,11 +113,30 @@ public class PathFinder : MonoBehaviour
             activeBreakpoints.RemoveAt(activeBreakpoints.Count - 1);
             BreakPoint = true;
         }
+        else
+        {
+            Finish = true;
+        }
         currentPos = nextPos;
+        if (currentPos.x > finalPosition.x)
+        {
+            finalPosition = currentPos;
+        }
         DisplayMap.ClearAllTiles();
         DisplayMap.SetTile((Vector3Int)currentPos, DisplayTile);
-        PreviousPath.Add(currentPos);
-        StartCoroutine(FindNextPath(BreakPoint));
+       
+            PreviousPath.Add(currentPos);
+        
+        if (!Finish)
+        {
+            StartCoroutine(FindNextPath(BreakPoint));
+        }
+        else
+        {
+            currentPos = finalPosition;
+            DisplayMap.ClearAllTiles();
+            DisplayMap.SetTile((Vector3Int)currentPos, DisplayTile);
+        }
 
     }
 
