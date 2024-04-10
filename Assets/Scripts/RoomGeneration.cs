@@ -16,7 +16,6 @@ public class RoomGeneration : MonoBehaviour
 
     [SerializeField] private RoomPreset currentPreset;
     [SerializeField] private DecorationPreset currentDecorPreset;
-    public TileBase TempTilebase;
     [Space]
     [Space]
 
@@ -46,7 +45,7 @@ public class RoomGeneration : MonoBehaviour
     private TileBounds foregroundMapBounds = new TileBounds();
     private TileBounds backgroundMapBounds = new TileBounds();
     private List<GameObject> allGodRays = new List<GameObject>();
-    
+
     private Vector2Int[] CornerMap = new Vector2Int[]
     {
         new Vector2Int(-1, 1),
@@ -98,10 +97,8 @@ public class RoomGeneration : MonoBehaviour
 
             GenerateLeaves();
             GenerateForeground();
-            generateIslands();
             generateBackground();
             generateGodRays();
-           
         }
 
     }
@@ -125,52 +122,7 @@ public class RoomGeneration : MonoBehaviour
     }
 
 
-    private void generateIslands()
-    {
-        BuildIsland(0);
-        BuildIsland(0);
-        BuildIsland(0);
 
-
-
-
-
-
-
-    }
-    public void BuildIsland(int currentAttempt)
-    {
-        if(currentAttempt > 100)
-        {
-            return;
-        }
-        Vector2Int Origin = new Vector2Int(UnityEngine.Random.Range(backgroundMapBounds.CellBounds.minX, backgroundMapBounds.CellBounds.maxX), UnityEngine.Random.Range(backgroundMapBounds.CellBounds.minY, backgroundMapBounds.CellBounds.maxY));
-        bool success = true;
-        for (int sx = -currentPreset.islandGenerationCheckDistance; sx < currentPreset.islandGenerationCheckDistance; sx++)
-        {
-            for (int sy = -currentPreset.islandGenerationCheckDistance; sy < currentPreset.islandGenerationCheckDistance; sy++)
-            {
-                if (groundTilemapOne.GetTile((Vector3Int)(Origin + new Vector2Int(sx, sy))) != null)
-                {
-                    success = false;
-
-
-                }
-
-
-            }
-        }
-        if (success)
-        {
-
-            groundTilemapOne.SetTile((Vector3Int)Origin, TempTilebase);
-        }
-        else
-        {
-            BuildIsland(currentAttempt + 1);
-        }
-
-    }
     public void GenerateExits()
     {
 

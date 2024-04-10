@@ -24,8 +24,7 @@ namespace TarodevController {
         public FrameInput Input { get; private set; }
         public bool JumpingThisFrame { get; private set; }
         public bool LandingThisFrame { get; private set; }
-        public int numberOfJumps = 2;
-        public int currentJump;
+
 
         public  bool Override;
         public bool TempOverride;
@@ -45,7 +44,6 @@ namespace TarodevController {
         
         private void Update() {
 
-            CanJump = CanUseCoyote;
 
 
 
@@ -109,8 +107,6 @@ namespace TarodevController {
             if (_colDown && !groundedCheck) _timeLeftGrounded = Time.time; // Only trigger when first leaving
             else if (!_colDown && groundedCheck) {
                 _coyoteUsable = true; // Only trigger when first touching
-
-
                 LandingThisFrame = true;
             }
 
@@ -318,7 +314,6 @@ namespace TarodevController {
         private float _apexPoint; // Becomes 1 at the apex of a jump
         private float _lastJumpPressed;
         private bool CanUseCoyote => _coyoteUsable && !_colDown && _timeLeftGrounded + _coyoteTimeThreshold > Time.time;
-        private bool CanJump = true;
         private bool HasBufferedJump => _colDown && _lastJumpPressed + _jumpBuffer > Time.time;
 
         private void CalculateJumpApex() {
@@ -341,7 +336,7 @@ namespace TarodevController {
             // Jump if: grounded or within coyote threshold || sufficient jump buffer
             if (Override == false && TempOverride == false)
             {
-                if (Input.JumpDown && CanJump || HasBufferedJump)
+                if (Input.JumpDown && CanUseCoyote || HasBufferedJump)
                 {
                     _currentVerticalSpeed = _jumpHeight;
                     _endedJumpEarly = false;
