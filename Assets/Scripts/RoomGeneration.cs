@@ -36,6 +36,7 @@ public class RoomGeneration : MonoBehaviour
     [Space]
     [Space]
     [SerializeField] private Tilemap backgroundTwoTilemap;
+    [SerializeField] private GameObject backgroundObj;
     public bool generate;
 
 
@@ -45,6 +46,8 @@ public class RoomGeneration : MonoBehaviour
     private TileBounds foregroundMapBounds = new TileBounds();
     private TileBounds backgroundMapBounds = new TileBounds();
     private List<GameObject> allGodRays = new List<GameObject>();
+    private Decoration LeafTile;
+
 
     private Vector2Int[] CornerMap = new Vector2Int[]
     {
@@ -56,6 +59,7 @@ public class RoomGeneration : MonoBehaviour
 
     private void Start()
     {
+        LeafTile = currentDecorPreset.Decorations.Find((x) => x.D_Type == DecorationPreset.DecorationType.Leaf);
         rand = new System.Random();
         //========================================================================================
         //Set Main Bounds
@@ -88,21 +92,25 @@ public class RoomGeneration : MonoBehaviour
     {
         if (generate)
         {
+            Generate();
             generate = false;
-            hillSeed = rand.Next(1, 2000);
-
-            clearMap();
-            DrawGround(currentPreset);
-            GenerateHills();
-
-            GenerateLeaves();
-            GenerateForeground();
-            generateBackground();
-            generateGodRays();
         }
-
     }
 
+
+    public void Generate()
+    {
+        generate = false;
+        hillSeed = rand.Next(1, 2000);
+        clearMap();
+        DrawGround(currentPreset);
+        GenerateHills();
+
+        GenerateForeground();
+        generateBackground();
+        generateGodRays();
+        updateColor();
+    }
     public void clearMap()
     {
         groundTilemapOne.ClearAllTiles();
@@ -119,13 +127,25 @@ public class RoomGeneration : MonoBehaviour
         }
         allGodRays.Clear();
 
+
     }
 
-
-
-    public void GenerateExits()
+  
+    private void updateColor()
     {
+        foregroundTilemap.color = currentPreset.foregroundColor;
 
+        groundTilemapOne.color = currentPreset.midgroundOneColor;
+        decorTilemapOne.color = currentPreset.midgroundOneColor;
+
+        groundTilemapTwo.color = currentPreset.midgroundTwoColor;
+        decorTilemapTwo.color = currentPreset.midgroundTwoColor;
+
+        backgroundOneTilemap.color = currentPreset.backgroundOneColor;
+
+        backgroundTwoTilemap.color = currentPreset.backgroundTwoColor;
+
+        backgroundObj.GetComponent<SpriteRenderer>().color = currentPreset.backdropColor;
     }
     public void generateGodRays()
     {
@@ -139,13 +159,42 @@ public class RoomGeneration : MonoBehaviour
         }
 
     }
+    public void GenerateGround(TileBounds _bounds, TileBase _tile1, TileBase _tile2)
+    {
+        for (int x = backgroundMapBounds.CellBounds.minX; x < backgroundMapBounds.CellBounds.maxX; x++)
+        {
+            for (int y = backgroundMapBounds.CellBounds.minY; y < backgroundMapBounds.CellBounds.maxY; y++)
+            {
+
+
+
+            }
+        }
+
+
+    }
+
+
+
     public void generateBackground()
     {
+
         for (int x = backgroundMapBounds.CellBounds.minX; x <= backgroundMapBounds.CellBounds.maxX; x++)
         {
             for (int y = backgroundMapBounds.CellBounds.minY; y <= backgroundMapBounds.CellBounds.maxY; y++)
             {
                 Vector2 worldPos = backgroundOneTilemap.CellToWorld(new Vector3Int(x, y, 0));
+                float leafHeight = backgroundMapBounds.WorldBounds.maxY - currentPreset.backgroundLeafDepth + (Mathf.Pow(x, 2) * currentPreset.backgroundLeafFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
+                if (worldPos.y > leafHeight)
+                {
+                    Plot(new Vector2Int(x, y), backgroundOneTilemap, LeafTile.D_Tile);
+
+                }
+                if (worldPos.y > leafHeight - currentPreset.secondaryBackgroundLeafDepth)
+                {
+                    Plot(new Vector2Int(x, y), backgroundTwoTilemap, LeafTile.D_Tile);
+
+                }
                 float layerOneHeight = backgroundMapBounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + hillSeed * 3, worldPos.y)) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff + currentPreset.backgroundHillHeight;
                 if(worldPos.y < layerOneHeight)
                 {
@@ -154,64 +203,16 @@ public class RoomGeneration : MonoBehaviour
                 if(worldPos.y < layerOneHeight + currentPreset.secondaryBackgroundHillDifference + getGroundNoise(new Vector2(worldPos.x + hillSeed * 4, worldPos.y)))
                 {
                     Plot(new Vector2Int(x, y), backgroundTwoTilemap, currentPreset.baseTile);
-
                 }
             }
         }
-
-
     }
 
 
-    public void GenerateLeaves()
+    
+
+    public void GenerateForeground()
     {
-                  Decoration temp = currentDecorPreset.Decorations.Find((x) => x.D_Type == DecorationPreset.DecorationType.Leaf);
-        if(temp == null) return;
-
-        for (int x = mainMapBounds.CellBounds.minX; x <= mainMapBounds.CellBounds.maxX; x++)
-        {
-            for (int y = mainMapBounds.CellBounds.minY; y <= mainMapBounds.CellBounds.maxY; y++)
-            {
-                Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, y, 0));
-                float leafHeight = mainMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
-
-                if (worldPos.y > leafHeight)
-                {
-                    int roll = UnityEngine.Random.Range(0, 100);
-                    if (roll < currentPreset.leafDensity)
-                    {
-                        Plot(new Vector2Int(x, y), decorTilemapOne, temp.D_Tile);
-                    }
-                }
-                if (worldPos.y > leafHeight - currentPreset.leafLayerTwoDifference)
-                {
-                    int roll = UnityEngine.Random.Range(0, 100);
-                    if (roll < currentPreset.leafDensity)
-                    {
-                        Plot(new Vector2Int(x, y), decorTilemapTwo, temp.D_Tile);
-                    }
-                }
-            }
-        }
-        for (int x = backgroundMapBounds.CellBounds.minX; x < backgroundMapBounds.CellBounds.maxX; x++)
-        {
-            for (int y = backgroundMapBounds.CellBounds.minY; y < backgroundMapBounds.CellBounds.maxY; y++)
-            {
-                Vector2 worldPos = backgroundOneTilemap.CellToWorld(new Vector3Int(x, y, 0));
-
-                float leafHeight = backgroundMapBounds.WorldBounds.maxY - currentPreset.backgroundLeafDepth + (Mathf.Pow(x, 2) * currentPreset.backgroundLeafFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
-                if(worldPos.y > leafHeight)
-                {
-                    Plot(new Vector2Int(x, y), backgroundOneTilemap, temp.D_Tile);
-
-                }
-                if (worldPos.y > leafHeight - currentPreset.secondaryBackgroundLeafDepth)
-                {
-                    Plot(new Vector2Int(x, y), backgroundTwoTilemap, temp.D_Tile);
-
-                }
-            }
-        }
 
         for (int x = foregroundMapBounds.CellBounds.minX; x <= foregroundMapBounds.CellBounds.maxX; x++)
         {
@@ -219,43 +220,18 @@ public class RoomGeneration : MonoBehaviour
             {
                 Vector2 worldPos = foregroundTilemap.CellToWorld(new Vector3Int(x, y, 0));
                 float leafHeight = foregroundMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
+                float groundHeight = currentPreset.foreGroundHeight + foregroundMapBounds.WorldBounds.minY - MathF.Abs(x) * currentPreset.foreGroundEdgeFalloff + getForegroundNoise(new Vector2(worldPos.x + hillSeed, 0));
+               
+                //Generate Leaves
+                if (worldPos.y > leafHeight + currentPreset.leafLayerTwoDifference / 2) 
+                    Plot(new Vector2Int(x, y), foregroundTilemap, LeafTile.D_Tile);
 
-                if (worldPos.y > leafHeight + currentPreset.leafLayerTwoDifference/2)
+                //Generate ground and bushes
+                if (worldPos.y < groundHeight)
                 {
-                    Plot(new Vector2Int(x, y), foregroundTilemap, temp.D_Tile);
-                }
-            }
-        }
-
-
-    }
-
-    public void GenerateForeground()
-    {
-        Decoration leafDecor = currentDecorPreset.Decorations.Find((x) => x.D_Type == DecorationPreset.DecorationType.Leaf);
-
-        for (int x = foregroundMapBounds.CellBounds.minX; x <= foregroundMapBounds.CellBounds.maxX; x++)
-        {
-            for (int y = foregroundMapBounds.CellBounds.minY; y <= foregroundMapBounds.CellBounds.maxY; y++)
-            {
-                Vector2 worldPos = foregroundTilemap.CellToWorld(new Vector3Int(x, y, 0));
-
-
-                if (worldPos.y < currentPreset.foreGroundHeight + foregroundMapBounds.WorldBounds.minY - MathF.Abs(x) * currentPreset.foreGroundEdgeFalloff + getForegroundNoise(new Vector2(worldPos.x + hillSeed, 0)))
-                {
-                    int roll = UnityEngine.Random.Range(50, 150);
-                    roll -= (int)MathF.Abs(x) * 10;
-                    if(roll < currentPreset.foreGroundLeafDensity)
-                    {
-
-                    Plot(new Vector2Int(x, y), foregroundTilemap, leafDecor.D_Tile);
-                    }
-                    else
-                    {
-                        Plot(new Vector2Int(x, y), foregroundTilemap, currentPreset.baseTile);
-
-                    }
-
+                    int roll = UnityEngine.Random.Range(50, 150) - (int)MathF.Abs(x) * 10;
+                    TileBase cTile = roll < currentPreset.foreGroundLeafDensity ? LeafTile.D_Tile : currentPreset.baseTile;
+                    Plot(new Vector2Int(x, y), foregroundTilemap, cTile);
                 }
             }
         }
@@ -266,6 +242,7 @@ public class RoomGeneration : MonoBehaviour
 
     public void GenerateHills()
     {
+
         for (int x = mainMapBounds.CellBounds.minX; x <= mainMapBounds.CellBounds.maxX; x++)
         {
             for (int sy = mainMapBounds.CellBounds.minY; sy <= mainMapBounds.CellBounds.maxY; sy++)
@@ -275,12 +252,28 @@ public class RoomGeneration : MonoBehaviour
 
                 Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, sy, 0));
                 float layerOneHeight = mainMapBounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + hillSeed, worldPos.y)) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff;
+                float leafHeight = mainMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
                 Vector2Int cellPos = new Vector2Int(x, sy);
 
 
+                    int roll = UnityEngine.Random.Range(0, 100);
+                if (worldPos.y > leafHeight)
+                {
+                    if (roll < currentPreset.leafDensity)
+                    {
+                        Plot(cellPos, decorTilemapOne, LeafTile.D_Tile);
+                    }
+                }
+                if (worldPos.y > leafHeight - currentPreset.leafLayerTwoDifference)
+                {
+                    if (roll < currentPreset.leafDensity)
+                    {
+                        Plot(cellPos, decorTilemapTwo, LeafTile.D_Tile);
+                    }
+                }
 
 
-                if(sy < currentPreset.groundMinHeight - currentPreset.size.y)
+                if (sy < currentPreset.groundMinHeight - currentPreset.size.y)
                 {
                     Plot(cellPos, groundTilemapOne, currentPreset.baseTile);
                     Plot(cellPos, groundTilemapTwo, currentPreset.baseTile);
@@ -335,11 +328,6 @@ public class RoomGeneration : MonoBehaviour
         }
 
     }
-
-
-
-
-
     public static void DrawLine(Vector2Int _pos0, Vector2Int _pos1, Tilemap _TM, TileBase _tile)
     {
 
@@ -379,5 +367,12 @@ public class RoomGeneration : MonoBehaviour
     public static void Plot(Vector2Int _pos1, Tilemap _TM, TileBase _tile)
     {
         _TM.SetTile((Vector3Int)_pos1, _tile);
+    }
+    public static void Plot(Vector2Int _pos1, Tilemap[] _TM, TileBase _tile)
+    {
+        for (int i = 0; i < _TM.Length; i++)
+        {
+            Plot(_pos1, _TM[i], _tile);
+        }
     }
 }

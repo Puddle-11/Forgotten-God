@@ -14,7 +14,7 @@ public class RoomPreset : ScriptableObject
     public Vector2Int godRayCount;
     [Range(0, 100)]
     public float subRoomFrequency;
-
+    [SerializeField] private Vector2Int numberOfDoors;
     [Space]
     [Space]
     [Header("Base Terrain Settings")]
