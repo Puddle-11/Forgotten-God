@@ -101,13 +101,20 @@ public class RoomGeneration : MonoBehaviour
     public void Generate()
     {
         generate = false;
-        hillSeed = rand.Next(1, 2000);
+        hillSeed = rand.Next(0, 50000);
+        
         clearMap();
+
         DrawGround(currentPreset);
+        /*
         GenerateHills();
 
         GenerateForeground();
         generateBackground();
+        */
+        GenerateGround(mainMapBounds, groundTilemapOne, currentPreset.baseTile, currentPreset.hillHeight, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 50000));
+        GenerateGround(mainMapBounds, groundTilemapTwo, currentPreset.baseTile, currentPreset.hillHeight + currentPreset.layerTwoDifference, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 50000));
+
         generateGodRays();
         updateColor();
     }
@@ -159,23 +166,40 @@ public class RoomGeneration : MonoBehaviour
         }
 
     }
-    public void GenerateGround(TileBounds _bounds, TileBase _tile1, TileBase _tile2)
+    public void GenerateGround(TileBounds _bounds,Tilemap _tilemap ,TileBase _tile1, TileBase _tile2, float _height, float _falloff, float _minHeight, int _seed)
     {
-        for (int x = backgroundMapBounds.CellBounds.minX; x < backgroundMapBounds.CellBounds.maxX; x++)
+        for (int x = _bounds.CellBounds.minX; x < _bounds.CellBounds.maxX; x++)
         {
-            for (int y = backgroundMapBounds.CellBounds.minY; y < backgroundMapBounds.CellBounds.maxY; y++)
+            for (int y = _bounds.CellBounds.minY; y < _bounds.CellBounds.maxY; y++)
             {
 
+                Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, y, 0));
+                float layerOneHeight = _bounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + _seed, worldPos.y)) + _height - Mathf.Abs(x) * _falloff;
+                Vector2Int cellPos = new Vector2Int(x, y);
+                if (y < _minHeight - _bounds.CellBounds.maxY)
+                {
+                    Plot(cellPos, _tilemap, _tile1);
+                }
+                if (worldPos.y < layerOneHeight)
+                {
+                    Plot(cellPos, _tilemap, _tile1);
 
-
+                }
             }
         }
-
-
     }
-
-
-
+    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, float _height, float _falloff, float _minHeight, int _seed)
+    {
+        GenerateGround(_bounds, _tilemap, _tile1, _tile1, _height, _falloff, _minHeight, _seed);
+    }
+    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, float _height, float _falloff, int _seed)
+    {
+        GenerateGround(_bounds, _tilemap, _tile1, _tile1, _height, _falloff, 0, _seed);
+    }
+    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, TileBase _tile2, float _height, float _falloff, int _seed)
+    {
+        GenerateGround(_bounds, _tilemap, _tile1, _tile2, _height, _falloff, 0,  _seed);
+    }
     public void generateBackground()
     {
 
@@ -184,7 +208,7 @@ public class RoomGeneration : MonoBehaviour
             for (int y = backgroundMapBounds.CellBounds.minY; y <= backgroundMapBounds.CellBounds.maxY; y++)
             {
                 Vector2 worldPos = backgroundOneTilemap.CellToWorld(new Vector3Int(x, y, 0));
-                float leafHeight = backgroundMapBounds.WorldBounds.maxY - currentPreset.backgroundLeafDepth + (Mathf.Pow(x, 2) * currentPreset.backgroundLeafFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
+                float leafHeight = backgroundMapBounds.WorldBounds.maxY - currentPreset.backgroundLeafDepth + (Mathf.Pow(x, 2) * currentPreset.backgroundLeafFalloff) + GetNoise(new Vector2(worldPos.x + hillSeed, 0), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight);
                 if (worldPos.y > leafHeight)
                 {
                     Plot(new Vector2Int(x, y), backgroundOneTilemap, LeafTile.D_Tile);
@@ -195,12 +219,12 @@ public class RoomGeneration : MonoBehaviour
                     Plot(new Vector2Int(x, y), backgroundTwoTilemap, LeafTile.D_Tile);
 
                 }
-                float layerOneHeight = backgroundMapBounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + hillSeed * 3, worldPos.y)) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff + currentPreset.backgroundHillHeight;
+                float layerOneHeight = backgroundMapBounds.WorldBounds.minY + GetNoise(new Vector2(worldPos.x + hillSeed * 3, worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff + currentPreset.backgroundHillHeight;
                 if(worldPos.y < layerOneHeight)
                 {
                     Plot(new Vector2Int(x, y), backgroundOneTilemap, currentPreset.baseTile);
                 }
-                if(worldPos.y < layerOneHeight + currentPreset.secondaryBackgroundHillDifference + getGroundNoise(new Vector2(worldPos.x + hillSeed * 4, worldPos.y)))
+                if(worldPos.y < layerOneHeight + currentPreset.secondaryBackgroundHillDifference + GetNoise(new Vector2(worldPos.x + hillSeed * 4, worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight))
                 {
                     Plot(new Vector2Int(x, y), backgroundTwoTilemap, currentPreset.baseTile);
                 }
@@ -219,8 +243,8 @@ public class RoomGeneration : MonoBehaviour
             for (int y = foregroundMapBounds.CellBounds.minY; y <= foregroundMapBounds.CellBounds.maxY; y++)
             {
                 Vector2 worldPos = foregroundTilemap.CellToWorld(new Vector3Int(x, y, 0));
-                float leafHeight = foregroundMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
-                float groundHeight = currentPreset.foreGroundHeight + foregroundMapBounds.WorldBounds.minY - MathF.Abs(x) * currentPreset.foreGroundEdgeFalloff + getForegroundNoise(new Vector2(worldPos.x + hillSeed, 0));
+                float leafHeight = foregroundMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + GetNoise(new Vector2(worldPos.x + hillSeed, 0), currentPreset.leafFrequency, currentPreset.leafMagnitude);
+                float groundHeight = currentPreset.foreGroundHeight + foregroundMapBounds.WorldBounds.minY - MathF.Abs(x) * currentPreset.foreGroundEdgeFalloff + GetNoise(new Vector2(worldPos.x + hillSeed, 0), currentPreset.hillFrequency, currentPreset.foreGroundMagnitude);
                
                 //Generate Leaves
                 if (worldPos.y > leafHeight + currentPreset.leafLayerTwoDifference / 2) 
@@ -251,8 +275,8 @@ public class RoomGeneration : MonoBehaviour
 
 
                 Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, sy, 0));
-                float layerOneHeight = mainMapBounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + hillSeed, worldPos.y)) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff;
-                float leafHeight = mainMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + getLeafNoise(new Vector2(worldPos.x + hillSeed, 0));
+                float layerOneHeight = mainMapBounds.WorldBounds.minY + GetNoise(new Vector2(worldPos.x + hillSeed, worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight) + currentPreset.hillHeight - Mathf.Abs(x) * currentPreset.edgeHillFalloff;
+                float leafHeight = mainMapBounds.WorldBounds.maxY - currentPreset.leafDepth + (Mathf.Pow(x, 2) * currentPreset.leafEdgeFalloff) + GetNoise(new Vector2(worldPos.x + hillSeed, 0), currentPreset.leafFrequency, currentPreset.leafMagnitude);
                 Vector2Int cellPos = new Vector2Int(x, sy);
 
 
@@ -284,7 +308,7 @@ public class RoomGeneration : MonoBehaviour
                     Plot(new Vector2Int(x, sy), groundTilemapTwo, currentPreset.baseTile);
 
                 }
-                if (worldPos.y <  layerOneHeight + currentPreset.layerTwoDifference + getGroundNoise(new Vector2(worldPos.x + hillSeed * 2, worldPos.y)))
+                if (worldPos.y <  layerOneHeight + currentPreset.layerTwoDifference + GetNoise(new Vector2(worldPos.x + hillSeed * 2, worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight))
                 {
                     Plot(cellPos, groundTilemapTwo, currentPreset.baseTile);
 
@@ -292,6 +316,7 @@ public class RoomGeneration : MonoBehaviour
             }
         }
     }
+    /*
     public float getGroundNoise(Vector2 _pos)
     {
        return noise.snoise(_pos/currentPreset.hillFrequency) * currentPreset.hillMagnitude + currentPreset.hillHeight;
@@ -305,7 +330,11 @@ public class RoomGeneration : MonoBehaviour
         return noise.snoise(_pos / currentPreset.leafFrequency) * currentPreset.leafMagnitude;
 
     }
-
+    */
+    public float GetNoise(Vector2 _pos, float _frequency, float _magnitude)
+    {
+        return noise.snoise(_pos / -_frequency) * _magnitude;
+    }
     public void DrawGround(RoomPreset _preset)
     {
         Vector2Int Offset = _preset.GetCenter();
