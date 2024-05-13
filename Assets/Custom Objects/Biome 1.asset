@@ -31,6 +31,13 @@ MonoBehaviour:
   hillMagnitude: 6.58
   hillHeight: 8.96
   edgeHillFalloff: -0.1
+  layerValues:
+  - L_color: {r: 0, g: 0, b: 0, a: 0}
+    L_frequency: 0
+    L_magnitude: 0
+    L_height: 0
+    L_falloff: 0
+    L_Scale: 2
   groundMinHeight: 2.7
   layerTwoDifference: 2.3
   backgroundHeight: 8.9

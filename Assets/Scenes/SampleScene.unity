@@ -2735,6 +2735,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1116671354}
   - component: {fileID: 1116671355}
+  - component: {fileID: 1116671356}
   m_Layer: 0
   m_Name: Room
   m_TagString: Untagged
@@ -2767,7 +2768,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1116671353}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1d8d4c8f143c6544a96b56e94f729a9, type: 3}
   m_Name: 
@@ -2784,6 +2785,38 @@ MonoBehaviour:
   backgroundTwoTilemap: {fileID: 1689721589}
   backgroundObj: {fileID: 490867093}
   generate: 1
+--- !u!114 &1116671356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116671353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084e433079810d84794c5512b074b79c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPreset: {fileID: 11400000, guid: 9342a4fd717d231459f51b0f58fb67e2, type: 2}
+  layers:
+  - L_bounds:
+      Scale: 0
+      WorldX:
+        min: 0
+        max: 0
+      WorldY:
+        min: 0
+        max: 0
+      CellX:
+        min: 0
+        max: 0
+      CellY:
+        min: 0
+        max: 0
+    L_baseTilemap: {fileID: 0}
+    L_decorTilemap: {fileID: 0}
+    L_obstacleTilemap: {fileID: 0}
+  debugSize: 1
 --- !u!1 &1226154502
 GameObject:
   m_ObjectHideFlags: 0
