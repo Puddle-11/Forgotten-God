@@ -26,12 +26,13 @@ MonoBehaviour:
   - {fileID: 1903591997297309579, guid: 8184c7e9da470144884e5c96c93fc2a2, type: 3}
   godRayCount: {x: 0, y: 7}
   subRoomFrequency: 0
+  numberOfDoors: {x: 0, y: 0}
   hillFrequency: 23.9
   hillMagnitude: 6.58
-  hillHeight: 4.87
+  hillHeight: 8.96
   edgeHillFalloff: -0.1
   groundMinHeight: 2.7
-  layerTwoDifference: 1.5
+  layerTwoDifference: 2.3
   backgroundHeight: 8.9
   leafFrequency: 38.1
   leafDensity: 34.2

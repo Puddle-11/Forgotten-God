@@ -2772,8 +2772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1d8d4c8f143c6544a96b56e94f729a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPreset: {fileID: 11400000, guid: 21da201ae28ffed438c77c87a4431a3b, type: 2}
+  currentPreset: {fileID: 11400000, guid: 9342a4fd717d231459f51b0f58fb67e2, type: 2}
   currentDecorPreset: {fileID: 11400000, guid: 489f1c88a0d91b446baf09570c81d8c0, type: 2}
+  groundLayers: []
   decorTilemapOne: {fileID: 1362522156}
   groundTilemapOne: {fileID: 602810351}
   decorTilemapTwo: {fileID: 302062942}

@@ -19,6 +19,10 @@ public class RoomGeneration : MonoBehaviour
     [Space]
     [Space]
 
+
+    [SerializeField] private RoomLayer[] groundLayers;
+
+
     [SerializeField] private Tilemap decorTilemapOne;
     [SerializeField] private Tilemap groundTilemapOne;
 
@@ -42,9 +46,6 @@ public class RoomGeneration : MonoBehaviour
 
     private int hillSeed;
     private System.Random rand;
-    private TileBounds mainMapBounds = new TileBounds();
-    private TileBounds foregroundMapBounds = new TileBounds();
-    private TileBounds backgroundMapBounds = new TileBounds();
     private List<GameObject> allGodRays = new List<GameObject>();
     private Decoration LeafTile;
 
@@ -61,6 +62,12 @@ public class RoomGeneration : MonoBehaviour
     {
         LeafTile = currentDecorPreset.Decorations.Find((x) => x.D_Type == DecorationPreset.DecorationType.Leaf);
         rand = new System.Random();
+        for (int i = 0; i < groundLayers.Length; i++)
+        {
+
+        }
+      
+        /*
         //========================================================================================
         //Set Main Bounds
         mainMapBounds.CellBounds.SetX(-currentPreset.size.x, currentPreset.size.x);
@@ -84,7 +91,7 @@ public class RoomGeneration : MonoBehaviour
         backgroundMapBounds.CellBounds.SetX(backgroundOneTilemap.WorldToCell(new Vector3(mainMapBounds.WorldBounds.minX, 0, 0)).x, backgroundOneTilemap.WorldToCell(new Vector3(mainMapBounds.WorldBounds.maxX, 0, 0)).x);
         backgroundMapBounds.WorldBounds.SetY(mainMapBounds.WorldBounds.minY, mainMapBounds.WorldBounds.maxY);
         backgroundMapBounds.WorldBounds.SetY(mainMapBounds.WorldBounds.minX, mainMapBounds.WorldBounds.maxX);
-
+        */
         //========================================================================================
 
     }
@@ -103,17 +110,42 @@ public class RoomGeneration : MonoBehaviour
         generate = false;
         hillSeed = rand.Next(0, 50000);
         
-        clearMap();
+        //clearMap();
 
         DrawGround(currentPreset);
-        /*
-        GenerateHills();
+        for (int i = 0; i < groundLayers.Length; i++)
+        {
+            if (i >= currentPreset.layerValues.Length)
+            {
+                break;
+            }
+            //GenerateGround(groundLayers[i].L_Bounds, groundLayers[i].L_MainTilemap, new TileBase[] {currentPreset.baseTile}, currentPreset.layerValues[i].L_height, currentPreset.layerValues[i].L_falloff, currentPreset.layerValues[i].L_magnitude);
 
-        GenerateForeground();
-        generateBackground();
-        */
-        GenerateGround(mainMapBounds, groundTilemapOne, currentPreset.baseTile, currentPreset.hillHeight, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 50000));
-        GenerateGround(mainMapBounds, groundTilemapTwo, currentPreset.baseTile, currentPreset.hillHeight + currentPreset.layerTwoDifference, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 50000));
+        }
+
+
+        //GenerateHills();
+        //GenerateForeground();
+        //generateBackground();
+
+
+
+        /*
+        for (int i = 0; i < groundLayers.Length; i++)
+        {
+            if (i >= currentPreset.layerValues.Length) break;
+            if(i == 1 && groundLayers.Length >= 3)
+            {
+                GenerateGround(mainMapBounds[i], new Tilemap[] { groundLayers[i], groundLayers[i]}, new TileBase[] { currentPreset.baseTile }, currentPreset.hillHeight, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 2000));
+                continue;
+            }
+            GenerateGround(mainMapBounds[i], new Tilemap[] { groundLayers[i] }, new TileBase[] { currentPreset.baseTile }, currentPreset.hillHeight, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 2000));
+        }
+     */
+        //GenerateGround(mainMapBounds, new Tilemap[] { groundTilemapOne, groundTilemapTwo}, new TileBase[] { currentPreset.baseTile }, currentPreset.hillHeight, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 2000));
+        //GenerateGround(mainMapBounds, new Tilemap[] { groundTilemapTwo }, new TileBase[] { currentPreset.baseTile }, currentPreset.hillHeight + currentPreset.layerTwoDifference, currentPreset.edgeHillFalloff, currentPreset.groundMinHeight, rand.Next(0, 2000));
+
+
 
         generateGodRays();
         updateColor();
@@ -140,18 +172,19 @@ public class RoomGeneration : MonoBehaviour
   
     private void updateColor()
     {
-        foregroundTilemap.color = currentPreset.foregroundColor;
+        /*
+        for (int i = 0; i < groundLayers.Length; i++)
+        {
+            if (i >= currentPreset.layerValues.Length)
+            {
+                groundLayers[i].color = Color.cyan;
 
-        groundTilemapOne.color = currentPreset.midgroundOneColor;
-        decorTilemapOne.color = currentPreset.midgroundOneColor;
+                continue;
+            }
+            groundLayers[i].color = currentPreset.layerValues[i].L_color;
+        }
 
-        groundTilemapTwo.color = currentPreset.midgroundTwoColor;
-        decorTilemapTwo.color = currentPreset.midgroundTwoColor;
-
-        backgroundOneTilemap.color = currentPreset.backgroundOneColor;
-
-        backgroundTwoTilemap.color = currentPreset.backgroundTwoColor;
-
+        */
         backgroundObj.GetComponent<SpriteRenderer>().color = currentPreset.backdropColor;
     }
     public void generateGodRays()
@@ -159,14 +192,14 @@ public class RoomGeneration : MonoBehaviour
         int godRayCount = UnityEngine.Random.Range(currentPreset.godRayCount.x, currentPreset.godRayCount.y);
         for (int i = 0; i < godRayCount; i++)
         {
-            float pos = UnityEngine.Random.Range(mainMapBounds.WorldBounds.minX,  mainMapBounds.WorldBounds.maxX);
+            float pos = UnityEngine.Random.Range(groundLayers[i].L_Bounds.WorldBounds.minX, groundLayers[i].L_Bounds.WorldBounds.maxX);
             int godRayType = UnityEngine.Random.Range(0, currentPreset.godRay.Length  -1);
             allGodRays.Add(Instantiate(currentPreset.godRay[godRayType], new Vector3(pos, 0, 0), Quaternion.identity, groundTilemapOne.transform.parent));
 
         }
 
     }
-    public void GenerateGround(TileBounds _bounds,Tilemap _tilemap ,TileBase _tile1, TileBase _tile2, float _height, float _falloff, float _minHeight, int _seed)
+    public void GenerateGround(TileBounds _bounds, Tilemap[] _tilemaps ,TileBase[] _tiles, float _height, float _falloff, float _minHeight)
     {
         for (int x = _bounds.CellBounds.minX; x < _bounds.CellBounds.maxX; x++)
         {
@@ -174,32 +207,50 @@ public class RoomGeneration : MonoBehaviour
             {
 
                 Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, y, 0));
-                float layerOneHeight = _bounds.WorldBounds.minY + getGroundNoise(new Vector2(worldPos.x + _seed, worldPos.y)) + _height - Mathf.Abs(x) * _falloff;
+                float layerOneHeight = _bounds.WorldBounds.minY + GetNoise(new Vector2(worldPos.x + rand.Next(0, 2000), worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight) + _height - Mathf.Abs(x) * _falloff;
                 Vector2Int cellPos = new Vector2Int(x, y);
+                TileBase currentTile = _tiles[UnityEngine.Random.Range(0, _tiles.Length)];
+                
+
                 if (y < _minHeight - _bounds.CellBounds.maxY)
                 {
-                    Plot(cellPos, _tilemap, _tile1);
+                    foreach (Tilemap i in _tilemaps)
+                    {
+
+                    Plot(cellPos, i, currentTile);
+                    }
                 }
                 if (worldPos.y < layerOneHeight)
                 {
-                    Plot(cellPos, _tilemap, _tile1);
+                    foreach (Tilemap i in _tilemaps)
+                    {
+
+                    Plot(cellPos, i, currentTile);
+                    }
 
                 }
             }
         }
     }
-    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, float _height, float _falloff, float _minHeight, int _seed)
+   /*
+    public void GenerateGround(TileBounds _bounds, Tilemap[] _tilemaps, TileBase[] _tiles, float _height, float _falloff, float _magnitude)
     {
-        GenerateGround(_bounds, _tilemap, _tile1, _tile1, _height, _falloff, _minHeight, _seed);
+        GenerateGround(_bounds, _tilemaps, _tiles, _height, _falloff, 0);
     }
-    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, float _height, float _falloff, int _seed)
+    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile, float _height, float _falloff, float _magnitude)
     {
-        GenerateGround(_bounds, _tilemap, _tile1, _tile1, _height, _falloff, 0, _seed);
+        GenerateGround(_bounds, new Tilemap[] { _tilemap }, new TileBase[] { _tile }, _height, _falloff, 0);
     }
-    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase _tile1, TileBase _tile2, float _height, float _falloff, int _seed)
+    public void GenerateGround(TileBounds _bounds, Tilemap _tilemap, TileBase[] _tiles, float _height, float _falloff, float _magnitude)
     {
-        GenerateGround(_bounds, _tilemap, _tile1, _tile2, _height, _falloff, 0,  _seed);
+        GenerateGround(_bounds, new Tilemap[] { _tilemap }, _tiles, _height, _falloff, 0);
     }
+    public void GenerateGround(TileBounds _bounds, Tilemap[] _tilemaps, TileBase _tile, float _height, float _falloff, float _magnitude)
+    {
+        GenerateGround(_bounds, _tilemaps, new TileBase[] { _tile }, _height, _falloff, 0);
+    }
+   */
+    /*
     public void generateBackground()
     {
 
@@ -231,7 +282,6 @@ public class RoomGeneration : MonoBehaviour
             }
         }
     }
-
 
     
 
@@ -316,21 +366,8 @@ public class RoomGeneration : MonoBehaviour
             }
         }
     }
-    /*
-    public float getGroundNoise(Vector2 _pos)
-    {
-       return noise.snoise(_pos/currentPreset.hillFrequency) * currentPreset.hillMagnitude + currentPreset.hillHeight;
-    }
-    public float getForegroundNoise(Vector2 _pos)
-    {
-        return noise.snoise(_pos / currentPreset.hillFrequency) * currentPreset.foreGroundMagnitude;
-    }
-    public float getLeafNoise(Vector2 _pos)
-    {
-        return noise.snoise(_pos / currentPreset.leafFrequency) * currentPreset.leafMagnitude;
-
-    }
     */
+
     public float GetNoise(Vector2 _pos, float _frequency, float _magnitude)
     {
         return noise.snoise(_pos / -_frequency) * _magnitude;
@@ -405,3 +442,14 @@ public class RoomGeneration : MonoBehaviour
         }
     }
 }
+[System.Serializable]
+public class RoomLayer
+{
+    public Tilemap L_MainTilemap;
+    public Tilemap L_DecorationTilemap;
+    public Tilemap L_ObstacleTilemap;
+    public TileBounds L_Bounds;
+
+}
+
+

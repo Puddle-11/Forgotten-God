@@ -6,6 +6,7 @@ public class TileBounds
 {
     public RangeFloat WorldBounds;
     public RangeInt CellBounds;
+    public float scale = 2;
     public TileBounds(float FloatMin, float FloatMax, int IntMin, int IntMax)
     {
         WorldBounds = new RangeFloat(FloatMin, FloatMax);

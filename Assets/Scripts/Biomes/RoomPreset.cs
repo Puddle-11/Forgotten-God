@@ -22,7 +22,7 @@ public class RoomPreset : ScriptableObject
     public float hillMagnitude;
     public float hillHeight;
     public float edgeHillFalloff;
-
+    public BiomeLayer[] layerValues;
 
     [Space]
     [Space]
@@ -68,4 +68,14 @@ public class RoomPreset : ScriptableObject
         return size / 2;
 
     }
+}
+[System.Serializable]
+public class BiomeLayer
+{
+    public Color L_color;
+    public float L_frequency;
+    public float L_magnitude;
+    public float L_height;
+    public float L_falloff;
+    public float L_Scale;
 }
