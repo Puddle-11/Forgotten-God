@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
 public class LayerManager : MonoBehaviour
 {
 
@@ -12,7 +11,7 @@ public class LayerManager : MonoBehaviour
     [SerializeField] private float inGroundSafeDist;
     [SerializeField] private float coyoteChangeTime;
     private float coyoteChangeTimer;
-
+   
     private Vector2[] raycastDir = new Vector2[]
     {
         new Vector2(0,1),
@@ -89,25 +88,13 @@ public class LayerManager : MonoBehaviour
     public void ChangeLayers(int _index)
     {
         bool value = _index == 0 ? true : false;
-        playerManagerRef.FlipSprite(playerManagerRef.spriteLayerOne, value);
-        playerManagerRef.FlipSprite(playerManagerRef.spriteLayerTwo, !value);
+        playerManagerRef.UpdateSprite(playerManagerRef.spriteLayerOne, value);
+
         LayerMask nextLayer = value == true ? groundLayerOne : groundLayerTwo;
         playerManagerRef.ChangeGround(nextLayer);
     }
     private int flip(int _value)
     {
-        if(_value == 1)
-        {
-            return 0;
-        }
-        else if(_value == 0)
-        {
-            return 1;
-        }
-        else
-        {
-            Debug.LogWarning("Invalid Value");
-            return 0;
-        }
+        return _value == 1 ? 0 : 1;
     }
 }

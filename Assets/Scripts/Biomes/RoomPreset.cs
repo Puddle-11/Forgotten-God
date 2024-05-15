@@ -9,32 +9,19 @@ public class RoomPreset : ScriptableObject
     [Header("General Settings")]
     public Vector2Int size;
     public TileBase baseTile;
-    public Color foregroundColor, midgroundOneColor, midgroundTwoColor, backgroundOneColor, backgroundTwoColor, backdropColor;
+    public TileBase leafTile;
+
+    public Color backdropColor;
     public GameObject[] godRay;
     public Vector2Int godRayCount;
-    [Range(0, 100)]
-    public float subRoomFrequency;
-    [SerializeField] private Vector2Int numberOfDoors;
-    [Space]
-    [Space]
-    [Header("Base Terrain Settings")]
-    public float hillFrequency;
-    public float hillMagnitude;
-    public float hillHeight;
-    public float edgeHillFalloff;
+
+
     public BiomeLayer[] layerValues;
 
-    [Space]
-    [Space]
-    [Header("Secondary Terrain Settings")]
-    public float groundMinHeight;
-    public float layerTwoDifference;
 
 
-    [Space]
-    [Space]
-    [Header("Secondary Terrain Settings")]
-    public float backgroundHeight;
+
+
 
 
     [Space]
@@ -48,10 +35,7 @@ public class RoomPreset : ScriptableObject
     public float leafDepth;
     public float leafLayerTwoDifference;
     public float leafMagnitude;
-    [Space]
-    [Space]
-    public float foreGroundMagnitude;
-    public float foreGroundHeight;
+
     [Range(0, 100)]
     public float foreGroundLeafDensity;
     public float foreGroundEdgeFalloff;
@@ -72,10 +56,15 @@ public class RoomPreset : ScriptableObject
 [System.Serializable]
 public class BiomeLayer
 {
-    public Color L_color;
-    public float L_frequency;
-    public float L_magnitude;
-    public float L_height;
-    public float L_falloff;
-    public float L_Scale;
+    public string L_Name = "Untitled Layer";
+    public Color L_color = Color.white;
+    public float L_terrainScale = 24;
+    public float L_magnitude = 6.5f;
+    public float L_height = 3;
+    public float L_falloff = -0.1f;
+    public float L_scale = 2;
+    public float L_leafScale = 24;
+    public float L_leafMagnitude = 6.5f;
+    public float L_leafDepth = 5;
+    public float L_leafFalloff = 0.1f;
 }

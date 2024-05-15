@@ -207,7 +207,7 @@ public class RoomGeneration : MonoBehaviour
             {
 
                 Vector2 worldPos = groundTilemapOne.CellToWorld(new Vector3Int(x, y, 0));
-                float layerOneHeight = _bounds.WorldBounds.minY + GetNoise(new Vector2(worldPos.x + rand.Next(0, 2000), worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight) + _height - Mathf.Abs(x) * _falloff;
+                //float layerOneHeight = _bounds.WorldBounds.minY + GetNoise(new Vector2(worldPos.x + rand.Next(0, 2000), worldPos.y), currentPreset.hillFrequency, currentPreset.hillMagnitude + currentPreset.hillHeight) + _height - Mathf.Abs(x) * _falloff;
                 Vector2Int cellPos = new Vector2Int(x, y);
                 TileBase currentTile = _tiles[UnityEngine.Random.Range(0, _tiles.Length)];
                 
@@ -220,6 +220,7 @@ public class RoomGeneration : MonoBehaviour
                     Plot(cellPos, i, currentTile);
                     }
                 }
+                /*
                 if (worldPos.y < layerOneHeight)
                 {
                     foreach (Tilemap i in _tilemaps)
@@ -229,6 +230,7 @@ public class RoomGeneration : MonoBehaviour
                     }
 
                 }
+                */
             }
         }
     }

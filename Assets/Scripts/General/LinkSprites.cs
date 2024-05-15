@@ -12,8 +12,8 @@ public class LinkSprites : MonoBehaviour
     {
 
 
-        if(target.sprite != LM.targetMap[LM.sourceMap.IndexOf(source.sprite)]) target.sprite = LM.targetMap[LM.sourceMap.IndexOf(source.sprite)];
-        if (target.flipX != source.flipX) target.flipX = source.flipX;
+       // if(target.sprite != LM.targetMap[LM.sourceMap.IndexOf(source.sprite)]) target.sprite = LM.targetMap[LM.sourceMap.IndexOf(source.sprite)];
+        //if (target.flipX != source.flipX) target.flipX = source.flipX;
 
     }
 }

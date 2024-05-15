@@ -12,35 +12,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 631df0dd07da3ae4fb94d8d2f9eecdda, type: 3}
   m_Name: Biome 1
   m_EditorClassIdentifier: 
-  size: {x: 15, y: 8}
+  size: {x: 31, y: 18}
   baseTile: {fileID: 11400000, guid: 67180a2bf15420d43b3e783b6ad922ad, type: 2}
-  foregroundColor: {r: 0.16078432, g: 0.105882354, b: 0.15686275, a: 1}
-  midgroundOneColor: {r: 0.47843137, g: 0.32156864, b: 0.34117648, a: 1}
-  midgroundTwoColor: {r: 0.7882353, g: 0.6392157, b: 0.5921569, a: 1}
-  backgroundOneColor: {r: 0.8901961, g: 0.81960785, b: 0.75686276, a: 1}
-  backgroundTwoColor: {r: 0.9137255, g: 0.8666667, b: 0.8039216, a: 1}
+  leafTile: {fileID: 11400000, guid: ace11db0fa6130046933e2251b637e1d, type: 2}
   backdropColor: {r: 0.92941177, g: 0.9019608, b: 0.8392157, a: 1}
   godRay:
   - {fileID: 6695071074778113810, guid: f127043dd7a67e944acf4c6e6dfcdc14, type: 3}
   - {fileID: 5653544750907460700, guid: 8df5c856fe13fc042a3748c93b721315, type: 3}
   - {fileID: 1903591997297309579, guid: 8184c7e9da470144884e5c96c93fc2a2, type: 3}
-  godRayCount: {x: 0, y: 7}
-  subRoomFrequency: 0
-  numberOfDoors: {x: 0, y: 0}
-  hillFrequency: 23.9
-  hillMagnitude: 6.58
-  hillHeight: 8.96
-  edgeHillFalloff: -0.1
+  godRayCount: {x: 2, y: 7}
   layerValues:
-  - L_color: {r: 0, g: 0, b: 0, a: 0}
-    L_frequency: 0
-    L_magnitude: 0
-    L_height: 0
-    L_falloff: 0
-    L_Scale: 2
-  groundMinHeight: 2.7
-  layerTwoDifference: 2.3
-  backgroundHeight: 8.9
+  - L_Name: Foreground
+    L_color: {r: 0.16078432, g: 0.105882354, b: 0.15686275, a: 0}
+    L_terrainScale: 24
+    L_magnitude: 3
+    L_height: 1
+    L_falloff: -0.36
+    L_scale: 3
+    L_leafScale: 24
+    L_leafMagnitude: 5
+    L_leafDepth: 2.94
+    L_leafFalloff: 0.5
+  - L_Name: Midground 1
+    L_color: {r: 0.47843137, g: 0.32156864, b: 0.34117648, a: 0}
+    L_terrainScale: 24
+    L_magnitude: 6.58
+    L_height: 9
+    L_falloff: -0.1
+    L_scale: 2
+    L_leafScale: 24
+    L_leafMagnitude: 5
+    L_leafDepth: 4.82
+    L_leafFalloff: 0.5
+  - L_Name: Midground 2
+    L_color: {r: 0.47843137, g: 0.32156864, b: 0.34117648, a: 0}
+    L_terrainScale: 24
+    L_magnitude: 6.58
+    L_height: 11
+    L_falloff: -0.1
+    L_scale: 2
+    L_leafScale: 24
+    L_leafMagnitude: 5
+    L_leafDepth: 6.51
+    L_leafFalloff: 0.4
+  - L_Name: Background 1
+    L_color: {r: 0.7882353, g: 0.6392157, b: 0.5921569, a: 0}
+    L_terrainScale: 20
+    L_magnitude: 6
+    L_height: 15
+    L_falloff: -0.2
+    L_scale: 1
+    L_leafScale: 24
+    L_leafMagnitude: 5
+    L_leafDepth: 11.1
+    L_leafFalloff: 0.03
+  - L_Name: Background 2
+    L_color: {r: 0.9137255, g: 0.8666667, b: 0.8039216, a: 0}
+    L_terrainScale: 23.7
+    L_magnitude: 4.88
+    L_height: 18.4
+    L_falloff: -0.2
+    L_scale: 1
+    L_leafScale: 24
+    L_leafMagnitude: 5
+    L_leafDepth: 12.4
+    L_leafFalloff: 0.05
   leafFrequency: 38.1
   leafDensity: 34.2
   leafCurve: 0
@@ -48,8 +84,6 @@ MonoBehaviour:
   leafDepth: 0.45
   leafLayerTwoDifference: 4
   leafMagnitude: 5.6
-  foreGroundMagnitude: 3.24
-  foreGroundHeight: 1.38
   foreGroundLeafDensity: 28.8
   foreGroundEdgeFalloff: -0.36
   backgroundHillHeight: 19.2

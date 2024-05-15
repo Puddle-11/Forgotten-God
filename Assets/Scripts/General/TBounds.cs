@@ -25,6 +25,19 @@ public class TBounds
     {
 
         Scale = _scale;
+        WorldX = new floatRange();
+        WorldY = new floatRange();
+        CellX = new intRange();
+        CellY = new intRange();
+
+    }
+    public TBounds()
+    {
+        Scale = 0;
+        WorldX = new floatRange();
+        WorldY = new floatRange();
+        CellX = new intRange();
+        CellY = new intRange();
     }
 
     public TBounds(float _scale, float _sizeX, float _sizeY)
@@ -51,6 +64,11 @@ public class floatRange
         min = _min;
         max = _max;
     }
+    public floatRange()
+    {
+        min = 0;
+        max = 0;
+    }
 
 }
 [System.Serializable]
@@ -59,6 +77,11 @@ public class intRange
 {
     public int min;
     public int max;
+    public intRange()
+    {
+        min = 0;
+        max = 0;
+    }
     public intRange(int _min, int _max)
     {
         min = _min;
