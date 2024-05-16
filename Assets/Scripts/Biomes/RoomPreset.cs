@@ -10,7 +10,7 @@ public class RoomPreset : ScriptableObject
     public Vector2Int size;
     public TileBase baseTile;
     public TileBase leafTile;
-
+    public Sprite colorTexture;
     public Color backdropColor;
     public GameObject[] godRay;
     public Vector2Int godRayCount;

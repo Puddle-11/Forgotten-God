@@ -15,6 +15,7 @@ MonoBehaviour:
   size: {x: 31, y: 18}
   baseTile: {fileID: 11400000, guid: 67180a2bf15420d43b3e783b6ad922ad, type: 2}
   leafTile: {fileID: 11400000, guid: ace11db0fa6130046933e2251b637e1d, type: 2}
+  colorTexture: {fileID: 21300000, guid: a53364f0aa5864a47aa13c3675cd981d, type: 3}
   backdropColor: {r: 0.92941177, g: 0.9019608, b: 0.8392157, a: 1}
   godRay:
   - {fileID: 6695071074778113810, guid: f127043dd7a67e944acf4c6e6dfcdc14, type: 3}

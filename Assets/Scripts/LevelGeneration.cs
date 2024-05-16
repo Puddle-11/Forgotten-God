@@ -16,8 +16,8 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField] private LayerValues[] layers;
     [SerializeField] private PolygonCollider2D cameraConfiner;
     [SerializeField] private CinemachineConfiner2D cinemachineCam;
+    [SerializeField] private SpriteRenderer Backdrop;
     private System.Random rand;
-
     public bool regenerate;
     private void Update()
     {
@@ -32,6 +32,17 @@ public class LevelGeneration : MonoBehaviour
     {
 
         rand = new System.Random();
+    }
+    private void UpdateColors(int rowIndex)
+    {
+        for (int x = 0; x < layers.Length; x++)
+        {
+            Color c = currentPreset.colorTexture.texture.GetPixel(x, rowIndex);
+
+            layers[x].L_baseTilemap.color = c;
+            layers[x].L_decorTilemap.color = c;
+        }
+        UpdateBackdrop(currentPreset.colorTexture.texture.GetPixel(currentPreset.colorTexture.texture.width,0));
     }
     private void Generate()
     {
@@ -48,6 +59,7 @@ public class LevelGeneration : MonoBehaviour
         }
         GenerateGodRays(transform);
         UpdateConfiner(layers[1], cameraConfiner);
+        UpdateColors(0);
     }
     private void UpdateConfiner(LayerValues _layer, PolygonCollider2D _collider)
     {
@@ -64,9 +76,9 @@ public class LevelGeneration : MonoBehaviour
        
 
     }
-    private void UpdateBackdrop()
+    private void UpdateBackdrop(Color _c)
     {
-
+        Backdrop.color = _c;
     }
    
     private void GenerateGodRays(Transform _parent)
@@ -77,8 +89,6 @@ public class LevelGeneration : MonoBehaviour
             Vector3 pos = new Vector3(UnityEngine.Random.Range(layers[0].L_bounds.WorldX.min, layers[0].L_bounds.WorldX.max), y, 0);
             Instantiate(currentPreset.godRay[UnityEngine.Random.Range(0, currentPreset.godRay.Length)], pos, quaternion.identity, _parent);
         }
-
-
     }
     private void GenerateLayer(int layerIndex, int _seed)
     {
