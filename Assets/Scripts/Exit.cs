@@ -33,7 +33,7 @@ public class Exit : MonoBehaviour
     public static void Teleport(Exit _endExit)
     {
         Debug.Log("Side: " + _endExit.exitSide + " Int: " +(int)_endExit.exitSide) ;
-        GlobalManager.Player.transform.position = _endExit.transform.position + (Vector3)(directionMatrix[(int)_endExit.exitSide] * GlobalManager.globalManagerRef.exitOffset);
+        GlobalManager.Player.transform.position = _endExit.transform.position + (Vector3)(directionMatrix[(int)_endExit.exitSide] * GlobalManager.globalManagerRef.GetPlayerManager().entranceOffset);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

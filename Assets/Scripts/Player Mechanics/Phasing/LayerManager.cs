@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 public class LayerManager : MonoBehaviour
@@ -11,7 +12,9 @@ public class LayerManager : MonoBehaviour
     [SerializeField] private float inGroundSafeDist;
     [SerializeField] private float coyoteChangeTime;
     private float coyoteChangeTimer;
-   
+    [SerializeField] private Sprite playerMapOne;
+    [SerializeField] private Sprite playerMapTwo;
+    [SerializeField] string sortingLayerOne, sortingLayerTwo;
     private Vector2[] raycastDir = new Vector2[]
     {
         new Vector2(0,1),
@@ -24,7 +27,8 @@ public class LayerManager : MonoBehaviour
         new Vector2(-1f,1f),
 
     };
-    public static int CurrentLayer;
+    public static int CurrentLayer = 0;
+
 
     private void Start()
     {
@@ -33,6 +37,7 @@ public class LayerManager : MonoBehaviour
     }
     void Update()
     {
+        Debug.Log("Current L: " + CurrentLayer);
         if (coyoteChangeTimer > 0)
         {
             bool inblock = false;
@@ -80,21 +85,35 @@ public class LayerManager : MonoBehaviour
             }
             else
             {
-                CurrentLayer = flip(CurrentLayer);
-                ChangeLayers(CurrentLayer);
+                ChangeLayers(flip(CurrentLayer));
             }
         }
     }
     public void ChangeLayers(int _index)
     {
+
+        _index = math.clamp(_index, 0, 1);
+        CurrentLayer = _index;
         bool value = _index == 0 ? true : false;
-        playerManagerRef.UpdateSprite(playerManagerRef.spriteLayerOne, value);
+        playerManagerRef.UpdateSprite(value);
 
         LayerMask nextLayer = value == true ? groundLayerOne : groundLayerTwo;
+
+        if (value)
+        {
+            playerManagerRef.ChangeSortingOrder(sortingLayerOne);
+
+        }
+        else
+        {
+            playerManagerRef.ChangeSortingOrder(sortingLayerTwo);
+
+        }
         playerManagerRef.ChangeGround(nextLayer);
     }
     private int flip(int _value)
     {
+        
         return _value == 1 ? 0 : 1;
     }
 }

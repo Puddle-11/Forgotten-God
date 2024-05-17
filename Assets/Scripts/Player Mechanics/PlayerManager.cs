@@ -3,31 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using TarodevController;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    public GameObject spriteLayerOne;
-    public GameObject spriteLayerTwo;
+   
     public TarodevController.PlayerController playerControllerRef;
     public bool inBlockLayerOne, inBlockLayerTwo;
-    public Material mapOne;
-    public Material mapTwo;
+    public Vector2 entranceOffset;
+    [SerializeField] private float teleportDelay;
+    [SerializeField] private SpriteRenderer[] ConnectedSprites;
+    [SerializeField] private Image[] ConnectedImages;
+    [SerializeField] private Image progressBar;
+    public float teleportTimer;
 
-    void Update()
+    private void Update()
     {
-
+        RunMoveEntrance();
     }
 
-
-    public void UpdateSprite(GameObject _spriteObj, bool _value)
+    public void RunMoveEntrance()
     {
-        Material m = _value == true ? mapOne : mapTwo;
-        Debug.Log(m);
+        if (Input.GetKey(GlobalManager.globalManagerRef.moveToEntranceKey))
+        {
+            teleportTimer += Time.deltaTime;
+        }
+        else if (teleportTimer > 0)
+        {
+            teleportTimer -= Time.deltaTime;
+        }
+        else if (teleportTimer < 0)
+        {
+            teleportTimer = 0;
+        }
+        if (teleportTimer >= teleportDelay)
+        {
+            MoveToEntrance();
+            teleportTimer = 0;
+        }
+        progressBar.fillAmount = teleportTimer / teleportDelay;
 
-        _spriteObj.GetComponent<SpriteRenderer>().material = m;
+    }
+    public void UpdateSprite(bool _val)
+    {
+        Material mat = _val ? ColorManager.CMref.playerLayerOneMat : ColorManager.CMref.playerLayerTwoMat;
+        foreach (SpriteRenderer Sp in ConnectedSprites)
+        {
+            Sp.material = mat;
+        }
+        foreach (Image Im in ConnectedImages)
+        {
+            Im.material = mat;
+        }
     }
     public void ChangeGround(LayerMask _newGround)
     {
         playerControllerRef.UpdateGround(_newGround);
+    }
+    public void ChangeSortingOrder(string id)
+    {
+        foreach (SpriteRenderer Sp in ConnectedSprites)
+        {
+        Sp.sortingLayerID = SortingLayer.NameToID(id);
+        }
+    }
+    public void MoveToEntrance()
+    {
+        if (LevelGeneration.LevelGenRef != null && LevelGeneration.LevelGenRef.entrance != null)
+        {
+            transform.position = LevelGeneration.LevelGenRef.entrance.transform.position + (Vector3)entranceOffset;
+            GlobalManager.globalManagerRef.GetLayerManager().ChangeLayers(0);
+        }
     }
 }
