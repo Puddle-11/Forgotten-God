@@ -14,16 +14,29 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float teleportDelay;
     [SerializeField] private SpriteRenderer[] ConnectedSprites;
     [SerializeField] private Image[] ConnectedImages;
-    [SerializeField] private Image progressBar;
-    public float teleportTimer;
-
+    [SerializeField] private GameObject progressBar;
+    private float teleportTimer;
+    [SerializeField] private float lowerThreshold;
+    private void Start()
+    {
+        GlobalManager.globalManagerRef.GetInteractionManager().staticInteractions.Add(new Interaction(MoveToEntrance, progressBar, teleportDelay, -1, GlobalManager.globalManagerRef.moveToEntranceKey));
+    }
     private void Update()
     {
-        RunMoveEntrance();
+        RunSafety();
+       // RunMoveEntrance();
     }
-
+    private void RunSafety()
+    {
+        if(transform.position.y < lowerThreshold)
+        {
+            MoveToEntrance();
+        }
+    }
     public void RunMoveEntrance()
     {
+
+
         if (Input.GetKey(GlobalManager.globalManagerRef.moveToEntranceKey))
         {
             teleportTimer += Time.deltaTime;
@@ -41,7 +54,7 @@ public class PlayerManager : MonoBehaviour
             MoveToEntrance();
             teleportTimer = 0;
         }
-        progressBar.fillAmount = teleportTimer / teleportDelay;
+       // progressBar.fillAmount = teleportTimer / teleportDelay;
 
     }
     public void UpdateSprite(bool _val)

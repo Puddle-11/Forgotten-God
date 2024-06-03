@@ -50,15 +50,14 @@ public class LevelGeneration : MonoBehaviour
         }
         if (regenerate)
         {
-            Clear();
             Generate();
             regenerate = false;
         }
-    
     }
 
-    private void Generate()
+    public void Generate()
     {
+            Clear();
         for (int i = 0; i < layers.Length; i++)
         {
             if (i >= currentPreset.layerValues.Length) break;
@@ -83,6 +82,7 @@ public class LevelGeneration : MonoBehaviour
     public IEnumerator finalizeDelay()
     {
         yield return new WaitForSeconds(2);
+        GlobalManager.globalManagerRef.layerManagerRef.ChangeLayers(0);
         GlobalManager.Player.SetActive(true);
     }
     private void UpdateConfiner(LayerValues _layer, PolygonCollider2D _collider)

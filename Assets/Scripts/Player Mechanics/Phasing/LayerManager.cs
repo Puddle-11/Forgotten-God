@@ -37,7 +37,7 @@ public class LayerManager : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log("Current L: " + CurrentLayer);
+        
         if (coyoteChangeTimer > 0)
         {
             bool inblock = false;
@@ -65,7 +65,7 @@ public class LayerManager : MonoBehaviour
             coyoteChangeTimer = 0;
         }
 
-
+        
         if (Input.GetKeyDown(GlobalManager.globalManagerRef.layerSwapKey))
         {
             //Check if player is in a block
@@ -75,6 +75,7 @@ public class LayerManager : MonoBehaviour
                 float dist = i % 2 != 0 ? inGroundSafeDist * Mathf.Sqrt(2) : inGroundSafeDist;
                 if (GlobalFunctions.Raycast(playerRef.transform.position, raycastDir[i], dist, CurrentLayer == 0 ? groundLayerTwo : groundLayerOne).collider != null) inblock = true;
             }
+        
             if (inblock == true)
             { 
                 if(coyoteChangeTimer == 0)

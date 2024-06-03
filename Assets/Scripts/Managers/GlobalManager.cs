@@ -6,10 +6,13 @@ public class GlobalManager : MonoBehaviour
 {
     public KeyCode layerSwapKey;
     public KeyCode moveToEntranceKey;
+    public KeyCode interactionKey;
     public static GlobalManager globalManagerRef;
     public LayerManager layerManagerRef;
-    public static GameObject Player;
+    public UIManager UIManagerRef;
     public PlayerManager playerManagerRef;
+    public InteractionManager interactionManagerRef;
+    public static GameObject Player;
 
     public enum roomType
     {
@@ -21,8 +24,23 @@ public class GlobalManager : MonoBehaviour
         Gauntlet = 5,
         Rest = 6,
     }
+    public InteractionManager GetInteractionManager()
+    {
+        if (interactionManagerRef == null)
+        {
+            interactionManagerRef = GetComponentInChildren<InteractionManager>();
+        }
+        return interactionManagerRef;
 
-
+    }
+    public UIManager GetUIManager()
+    {
+        if (UIManagerRef == null)
+        {
+            UIManagerRef = GetComponentInChildren<UIManager>();
+        }
+        return UIManagerRef;
+    }
     public LayerManager GetLayerManager()
     {
         if(layerManagerRef == null)
