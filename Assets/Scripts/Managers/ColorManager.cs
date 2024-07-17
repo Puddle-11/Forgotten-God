@@ -26,7 +26,10 @@ public class ColorManager : MonoBehaviour
         size.x = mainPalette.texture.width;
         size.y= mainPalette.texture.height;
     }
-
+    public static bool isValid()
+    {
+        return CMref != null;
+    }
    
    
     public Color GetTextureColor(Vector2Int _pos)
