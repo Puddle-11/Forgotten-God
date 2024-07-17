@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using Unity.Mathematics;
 using UnityEngine;
-
 public class EntityManager : MonoBehaviour
 {
     [SerializeField] private ParticleController particleControllerRef;
@@ -15,52 +14,100 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private int deathParticleIndex;
     [SerializeField] private int lowHealthParticleIndex;
     public bool testParticles;
+    
     private void Start()
     {
-        SetHealth(10);
+        if (particleControllerRef == null)
+        {
+            if (!TryGetComponent<ParticleController>(out particleControllerRef))
+            {
+                Debug.LogWarning("No particle controller found. Please manually asign in inspector");
+            }
+        }
+            SetHealth(maxHealth);
     }
     public void Update()
     {
         if (testParticles)
         {
-            UpdateHealth(-9);
+            SetCurrentHealth(10);
             testParticles = false;
         }
     }
-    private void SetHealth(int _health)
+    //---------------------------------------------------------
+
+    #region Set Health Functions
+    //=========================================================
+    //Set Health Functions
+
+    private void SetHealth(int _mHealth) 
+    //sets the max health and current health, takes one health variable for both max and current health
     {
-        if (_health < 1) _health = 1;
-        maxHealth = _health;
-        currentHealth = _health;
+        SetHealth(_mHealth, _mHealth);
 
     }
-
-    public void UpdateHealth()
+    private void SetHealth(int _mHealth, int _cHealth) 
+    //Overload 1, takes two ints, max health and current health
     {
-        SetHealth(maxHealth);
+        //clamp max health to min 1
+        if (_mHealth < 1) _mHealth = 1; 
+        //set the max health via function
+        SetMaxHealth(_mHealth);
+        //clamp the current health between max and 0
+        _cHealth = Math.Clamp(_cHealth, 0, maxHealth);
+        //set current health via function
+        SetCurrentHealth(_cHealth);
     }
-    public void UpdateHealth(int _val)
+    //=========================================================
+    #endregion 
+
+    //---------------------------------------------------------
+
+    #region Set Health Sub-Functions
+    //=========================================================
+    //Set Health Sub-Functions
+    //Set Max health and Set current Health
+    public void SetMaxHealth(int _val)
     {
-        int newHealth = Math.Clamp(_val + currentHealth, 0, maxHealth);
-        currentHealth = newHealth;
+        maxHealth = _val;
+    }
+    public void SetCurrentHealth(int _val)
+    {
+        _val = Math.Clamp(_val, 0, maxHealth);
+        currentHealth = _val;
         if (currentHealth <= maxHealth / 10 || currentHealth== 1)
         {
-
-            particleControllerRef.StartParticle( lowHealthParticleIndex);
+            particleControllerRef.StartParticle(lowHealthParticleIndex);
         }
         else
         {
-
             particleControllerRef.StopParticle(lowHealthParticleIndex);
         }
+
         if(currentHealth == 0) Kill();
-        
     }
+    //=========================================================
+    #endregion
+
+    //---------------------------------------------------------
+
+    #region Update Health
+    //=========================================================
+    //Update health Function
+    public void UpdateHealth(int _val)
+    {
+        SetCurrentHealth(currentHealth + _val);
+    }
+    //=========================================================
+    #endregion
+
+    //---------------------------------------------------------
+
     public void Kill()
     {
+        particleControllerRef.StopParticle(lowHealthParticleIndex);
         particleControllerRef.StartParticle(1, deathParticleIndex, RemoveFromScope);
         dead = true;
-
     }
     public void RemoveFromScope()
     {

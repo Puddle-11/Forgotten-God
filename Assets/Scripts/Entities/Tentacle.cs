@@ -16,9 +16,23 @@ public class Tentacle : MonoBehaviour
     public float wiggleMagnitude;
     public Transform wiggleDir;
     public Transform[] BodyParts;
+    [SerializeField] private int col1;
+    [SerializeField] private int col2;
+    private ObjectPaletteManager objPalette;
     void Start()
     {
+        if(!TryGetComponent<ObjectPaletteManager>(out objPalette) || !transform.parent.TryGetComponent<ObjectPaletteManager>(out objPalette))
+        {
+         
+           objPalette = GetComponentInParent<ObjectPaletteManager>();
+        }
+     
 
+            if(objPalette != null)
+            {
+                Linerend.startColor = objPalette.GetColor(col1);
+                Linerend.endColor = objPalette.GetColor(col2);
+            }
         wiggleSpeed = wiggleSpeed / wiggleMagnitude;
         wiggleSpeed = Mathf.Abs(wiggleSpeed);
 

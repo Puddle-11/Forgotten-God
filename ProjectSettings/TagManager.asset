@@ -47,8 +47,14 @@ TagManager:
   - name: Layer 2
     uniqueID: 18728897
     locked: 0
+  - name: Entity Behind
+    uniqueID: 1916389669
+    locked: 0
   - name: Layer 1
     uniqueID: 2206254981
+    locked: 0
+  - name: Entity Infront
+    uniqueID: 10581731
     locked: 0
   - name: Foreground
     uniqueID: 3815193729

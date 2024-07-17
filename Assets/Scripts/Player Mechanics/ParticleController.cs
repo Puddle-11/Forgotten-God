@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -29,8 +30,20 @@ public class ParticleController : MonoBehaviour
     {
         if (particles.Length > 0)
         {
-            _index = Math.Clamp(_index, 0, particles.Length);
-            particles[_index].Play();
+            if (particles[_index] == null)
+            {
+                Debug.LogWarning("Particle Not assigned at index " + _index + " On object: " + gameObject.name + " ID: " + gameObject.GetInstanceID());
+
+            }
+            else
+            {
+                _index = Math.Clamp(_index, 0, particles.Length);
+                particles[_index].Play();
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Tried accessing a particle system outside the range");
         }
     }
     public void StopParticle(int _index)
