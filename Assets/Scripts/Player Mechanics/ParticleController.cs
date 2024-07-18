@@ -82,7 +82,7 @@ public class ParticleController : MonoBehaviour
     }
     public bool IsIndexValid(int _index)
     {
-        if (particles.Count > 0 && _index > 0 && _index < particles.Count)
+        if (particles.Count > 0 && _index >= 0 && _index < particles.Count)
         {
             if (particles[_index] == null)
             {
@@ -96,7 +96,7 @@ public class ParticleController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Tried accessing a particle system outside the range");
+            Debug.LogWarning("Tried accessing a particle system outside the range\n At Index: " + _index);
             return false;
 
         }

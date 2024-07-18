@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,14 +10,17 @@ public class EntityManager : MonoBehaviour
 {
     [SerializeField] private ParticleController particleControllerRef;
     [SerializeField] private Slider healthBar;
-    [SerializeField] private int currentHealth;
+    private int currentHealth;
     [SerializeField] private int maxHealth;
+    [Range(0.0f, 1.0f)]
+    [SerializeField] private float lowHealthThreshhold = 0.1f;
+
     private bool dead = false;
     [SerializeField] private int deathParticleIndex;
     [SerializeField] private int lowHealthParticleIndex;
     [SerializeField] private float killTime;
     public bool testParticles;
-    
+
     private void Start()
     {
         if (particleControllerRef == null)
@@ -26,7 +30,7 @@ public class EntityManager : MonoBehaviour
                 Debug.LogWarning("No particle controller found. Please manually asign in inspector");
             }
         }
-            SetHealth(maxHealth);
+        SetHealth(maxHealth);
     }
     public void Update()
     {
@@ -42,17 +46,17 @@ public class EntityManager : MonoBehaviour
     //=========================================================
     //Set Health Functions
 
-    private void SetHealth(int _mHealth) 
+    private void SetHealth(int _mHealth)
     //sets the max health and current health, takes one health variable for both max and current health
     {
         SetHealth(_mHealth, _mHealth);
 
     }
-    private void SetHealth(int _mHealth, int _cHealth) 
+    private void SetHealth(int _mHealth, int _cHealth)
     //Overload 1, takes two ints, max health and current health
     {
         //clamp max health to min 1
-        if (_mHealth < 1) _mHealth = 1; 
+        if (_mHealth < 1) _mHealth = 1;
         //set the max health via function
         SetMaxHealth(_mHealth);
         //clamp the current health between max and 0
@@ -77,18 +81,27 @@ public class EntityManager : MonoBehaviour
     {
         _val = Math.Clamp(_val, 0, maxHealth);
         currentHealth = _val;
-        if (currentHealth <= maxHealth / 10 || currentHealth== 1)
+
+        float v = (float)currentHealth / (float)maxHealth;
+        if (v <= lowHealthThreshhold || currentHealth == 1)
         {
+
             particleControllerRef.StartParticle(lowHealthParticleIndex);
         }
         else
         {
             particleControllerRef.StopParticle(lowHealthParticleIndex);
         }
-        float v = (float)currentHealth / (float)maxHealth;
 
-        healthBar.value = v;
-        if(currentHealth == 0) Kill();
+
+
+
+        if (healthBar != null)
+        {
+            healthBar.value = v;
+        }
+
+        if (currentHealth == 0) Kill();
 
     }
     //=========================================================
@@ -122,7 +135,7 @@ public class EntityManager : MonoBehaviour
         particleControllerRef.StopParticle(lowHealthParticleIndex);
         particleControllerRef.ChangeParent(deathParticleIndex, null);
         particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
-        
+
         particleControllerRef.RemoveParticle(deathParticleIndex, -1);
         dead = true;
     }
@@ -130,5 +143,5 @@ public class EntityManager : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    
+
 }
