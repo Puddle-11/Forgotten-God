@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using System.Data;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 public class EntityManager : MonoBehaviour
 {
     [SerializeField] private ParticleController particleControllerRef;
-    [SerializeField] private GameObject healthBar;
+    [SerializeField] private Slider healthBar;
     [SerializeField] private int currentHealth;
     [SerializeField] private int maxHealth;
-    [SerializeField] private bool dead = false;
+    private bool dead = false;
     [SerializeField] private int deathParticleIndex;
     [SerializeField] private int lowHealthParticleIndex;
+    [SerializeField] private float killTime;
     public bool testParticles;
     
     private void Start()
@@ -30,7 +32,7 @@ public class EntityManager : MonoBehaviour
     {
         if (testParticles)
         {
-            SetCurrentHealth(10);
+            SetCurrentHealth(50);
             testParticles = false;
         }
     }
@@ -83,8 +85,11 @@ public class EntityManager : MonoBehaviour
         {
             particleControllerRef.StopParticle(lowHealthParticleIndex);
         }
+        float v = (float)currentHealth / (float)maxHealth;
 
+        healthBar.value = v;
         if(currentHealth == 0) Kill();
+
     }
     //=========================================================
     #endregion
@@ -102,16 +107,28 @@ public class EntityManager : MonoBehaviour
     #endregion
 
     //---------------------------------------------------------
-
+    public bool isAlive()
+    {
+        return !dead;
+    }
     public void Kill()
     {
+        if (dead) return;
+        Tentacle[] tentacleArr = GetComponentsInChildren<Tentacle>();
+        for (int i = 0; i < tentacleArr.Length; i++)
+        {
+            tentacleArr[i].targetDist = 0;
+        }
         particleControllerRef.StopParticle(lowHealthParticleIndex);
-        particleControllerRef.StartParticle(1, deathParticleIndex, RemoveFromScope);
+        particleControllerRef.ChangeParent(deathParticleIndex, null);
+        particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
+        
+        particleControllerRef.RemoveParticle(deathParticleIndex, -1);
         dead = true;
     }
     public void RemoveFromScope()
     {
-        Destroy(this);
+        Destroy(gameObject);
     }
     
 }

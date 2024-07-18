@@ -24,7 +24,10 @@ public class SpriteColorReceiver : MonoBehaviour
         {
            SP.color = objPalette.GetColor(colorIndex);
         }
-      
+        else
+        {
+            Debug.LogWarning("Failed to get Object Palette Manager on Obejct: " + gameObject.name + " ID: " + gameObject.GetInstanceID());
+        }
     }
 
   

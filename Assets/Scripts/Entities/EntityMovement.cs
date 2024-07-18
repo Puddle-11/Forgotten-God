@@ -14,17 +14,29 @@ public class EntityMovement : MonoBehaviour
     public float moveSpeed;
     private float currentSpeed;
     [SerializeField] private float AccelerationSpeed;
-
-    public void Start()
+    private EntityManager Enman;
+    private void Awake()
     {
-     
-
+        TryGetComponent<EntityManager>(out Enman);
+        
     }
     private void FixedUpdate()
     {
-        currentSpeed = Vector2.Distance(transform.position, target.transform.position) > MinDist ? Mathf.MoveTowards(currentSpeed, moveSpeed, AccelerationSpeed) : Mathf.MoveTowards(currentSpeed, 0, AccelerationSpeed);
+        if (Enman != null && Enman.isAlive())
+        {
+            currentSpeed = Vector2.Distance(transform.position, target.transform.position) > MinDist ? Mathf.MoveTowards(currentSpeed, moveSpeed, AccelerationSpeed) : Mathf.MoveTowards(currentSpeed, 0, AccelerationSpeed);
+        }
+        else
+        {
+            currentSpeed = 0;
+        }
     }
     void Update()
+    {
+        MoveEnemy();
+
+    }
+    public virtual void MoveEnemy()
     {
         if (target != null)
         {
@@ -32,11 +44,10 @@ public class EntityMovement : MonoBehaviour
             if (moveSpeed > 0)
             {
 
-                    TempPos = Vector2.MoveTowards(transform.position, target.transform.position, currentSpeed * Time.deltaTime);
-                    transform.position = new Vector3(TempPos.x, TempPos.y, transform.position.z);
-  
+                TempPos = Vector2.MoveTowards(transform.position, target.transform.position, currentSpeed * Time.deltaTime);
+                transform.position = new Vector3(TempPos.x, TempPos.y, transform.position.z);
+
             }
         }
-
     }
 }
