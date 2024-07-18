@@ -17,7 +17,6 @@ public class SpriteColorReceiver : MonoBehaviour
     {
         if (!TryGetComponent<ObjectPaletteManager>(out objPalette) || !transform.parent.TryGetComponent<ObjectPaletteManager>(out objPalette))
         {
-
             objPalette = GetComponentInParent<ObjectPaletteManager>();
         }
         if (objPalette != null)

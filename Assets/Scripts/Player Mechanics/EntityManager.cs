@@ -11,6 +11,7 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private ParticleController particleControllerRef;
     [SerializeField] private Slider healthBar;
     private int currentHealth;
+
     [SerializeField] private int maxHealth;
     [Range(0.0f, 1.0f)]
     [SerializeField] private float lowHealthThreshhold = 0.1f;
@@ -20,64 +21,31 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private int lowHealthParticleIndex;
     [SerializeField] private float killTime;
     public bool testParticles;
-    
     private void Start()
     {
-        if (particleControllerRef == null)
-        {
-            if (!TryGetComponent<ParticleController>(out particleControllerRef))
-            {
-                Debug.LogWarning("No particle controller found. Please manually asign in inspector");
-            }
-        }
-            SetHealth(maxHealth);
+        SetHealth(maxHealth);
     }
     public void Update()
     {
         if (testParticles)
         {
             UpdateHealth(-10);
+
             testParticles = false;
         }
     }
-    //---------------------------------------------------------
-
-    #region Set Health Functions
-    //=========================================================
-    //Set Health Functions
-
-    private void SetHealth(int _mHealth) 
-    //sets the max health and current health, takes one health variable for both max and current health
+    public void SetHealth(int _health)
     {
-        SetHealth(_mHealth, _mHealth);
+        if (_health < 1) _health = 1;
+        maxHealth = _health;
+        currentHealth = _health;
 
     }
-    private void SetHealth(int _mHealth, int _cHealth) 
-    //Overload 1, takes two ints, max health and current health
+    public void SetHealth()
     {
-        //clamp max health to min 1
-        if (_mHealth < 1) _mHealth = 1; 
-        //set the max health via function
-        SetMaxHealth(_mHealth);
-        //clamp the current health between max and 0
-        _cHealth = Math.Clamp(_cHealth, 0, maxHealth);
-        //set current health via function
-        SetCurrentHealth(_cHealth);
+        SetHealth(maxHealth);
     }
-    //=========================================================
-    #endregion 
-
-    //---------------------------------------------------------
-
-    #region Set Health Sub-Functions
-    //=========================================================
-    //Set Health Sub-Functions
-    //Set Max health and Set current Health
-    public void SetMaxHealth(int _val)
-    {
-        maxHealth = _val;
-    }
-    public void SetCurrentHealth(int _val)
+    public void UpdateHealth(int _val)
     {
         _val = Math.Clamp(_val, 0, maxHealth);
         currentHealth = _val;
@@ -138,7 +106,9 @@ public class EntityManager : MonoBehaviour
         particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
         
         particleControllerRef.RemoveParticle(deathParticleIndex, -1);
+
         dead = true;
+
     }
     public void RemoveFromScope()
     {
