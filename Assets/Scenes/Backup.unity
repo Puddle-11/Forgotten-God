@@ -4937,8 +4937,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particleControllerRef: {fileID: 1716804424}
   healthBar: {fileID: 0}
-  currentHealth: 0
   maxHealth: 10
+  lowHealthThreshhold: 0.1
   deathParticleIndex: -1
   lowHealthParticleIndex: -1
   killTime: 0
