@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+[RequireComponent(typeof(Image))]
 
-public class ParticleColorReciever : MonoBehaviour
+public class UIImageColorReceiver : MonoBehaviour
 {
+
     private ObjectPaletteManager objPalette;
-    private ParticleSystem PS;
+    private Image ImRef;
     [SerializeField] private int colorIndex;
-    [SerializeField] private bool useGradient;
     private void Awake()
     {
-        PS = GetComponent<ParticleSystem>();
-
+        ImRef = GetComponent<Image>();
     }
     // Start is called before the first frame update
     void Start()
@@ -23,11 +24,11 @@ public class ParticleColorReciever : MonoBehaviour
         }
         if (objPalette != null)
         {
-            var mainMod = PS.main;
-            mainMod.startColor = objPalette.GetColor(colorIndex);
-            
+            ImRef.color = objPalette.GetColor(colorIndex);
         }
-
+        else
+        {
+            Debug.LogWarning("Failed to get Object Palette Manager on Obejct: " + gameObject.name + " ID: " + gameObject.GetInstanceID());
+        }
     }
-
 }

@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
-    public bool runTest;
     private bool currentlyRunning = false;
     private bool fadeOpen = true;
     [SerializeField] private float fadeSpeed;
@@ -25,23 +24,19 @@ public class UIManager : MonoBehaviour
     void Update()
     {
 
-        if (runTest)
-        {
-            BeginFade(1);
-            runTest = false;
-        }
+    
 
 
         if (fadeOpen)
         {
-            panelOne.transform.localPosition = Vector3.MoveTowards(panelOne.transform.localPosition, panelOneEndAnchor, fadeSpeed);
-            panelTwo.transform.localPosition = Vector3.MoveTowards(panelTwo.transform.localPosition, panelTwoEndAnchor, fadeSpeed);
+            panelOne.transform.localPosition = Vector3.MoveTowards(panelOne.transform.localPosition, panelOneEndAnchor, fadeSpeed * Time.deltaTime * 100);
+            panelTwo.transform.localPosition = Vector3.MoveTowards(panelTwo.transform.localPosition, panelTwoEndAnchor, fadeSpeed * Time.deltaTime * 100);
 
         }
         else
         {
-           panelOne.transform.localPosition = Vector3.MoveTowards(panelOne.transform.localPosition, panelOneStartAnchor, fadeSpeed);
-           panelTwo.transform.localPosition = Vector3.MoveTowards(panelTwo.transform.localPosition, panelTwoStartAnchor, fadeSpeed);
+           panelOne.transform.localPosition = Vector3.MoveTowards(panelOne.transform.localPosition, panelOneStartAnchor, fadeSpeed * Time.deltaTime * 100);
+           panelTwo.transform.localPosition = Vector3.MoveTowards(panelTwo.transform.localPosition, panelTwoStartAnchor, fadeSpeed * Time.deltaTime * 100);
         }
 
     }

@@ -1,21 +1,25 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Unity.Mathematics;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class EntityManager : MonoBehaviour
 {
     [SerializeField] private ParticleController particleControllerRef;
-    [SerializeField] private GameObject healthBar;
+    [SerializeField] private Slider healthBar;
     private int currentHealth;
-    private int currentSheild;
-    [SerializeField] private int maxSheild;
+
     [SerializeField] private int maxHealth;
-    [SerializeField] private bool dead = false;
+    [Range(0.0f, 1.0f)]
+    [SerializeField] private float lowHealthThreshhold = 0.1f;
+
+    private bool dead = false;
     [SerializeField] private int deathParticleIndex;
     [SerializeField] private int lowHealthParticleIndex;
+    [SerializeField] private float killTime;
     public bool testParticles;
     private void Start()
     {
@@ -25,7 +29,8 @@ public class EntityManager : MonoBehaviour
     {
         if (testParticles)
         {
-            UpdateHealth(-currentHealth);
+            UpdateHealth(-10);
+
             testParticles = false;
         }
     }
@@ -42,24 +47,66 @@ public class EntityManager : MonoBehaviour
     }
     public void UpdateHealth(int _val)
     {
-        int newHealth = Math.Clamp(_val + currentHealth, 0, maxHealth);
-        currentHealth = newHealth;
-        if (currentHealth <= maxHealth / 10 || currentHealth== 1)
-        {
+        _val = Math.Clamp(_val, 0, maxHealth);
+        currentHealth = _val;
 
-            particleControllerRef.StartParticle( lowHealthParticleIndex);
-        }
-        else
-        {
-
-            particleControllerRef.StopParticle(lowHealthParticleIndex);
-        }
-        if(currentHealth == 0) Kill();
         
+            if (currentHealth / maxHealth <= lowHealthThreshhold || currentHealth == 1)
+            {
+
+                particleControllerRef.StartParticle(lowHealthParticleIndex);
+            }
+            else
+            {
+                particleControllerRef.StopParticle(lowHealthParticleIndex);
+            }
+        
+
+        
+
+        float v = (float)currentHealth / (float)maxHealth;
+        if (healthBar != null)
+        {
+            healthBar.value = v;
+        }
+        
+        if(currentHealth == 0) Kill();
+
+    }
+    //=========================================================
+    #endregion
+
+    //---------------------------------------------------------
+
+    #region Update Health
+    //=========================================================
+    //Update health Function
+    public void UpdateHealth(int _val)
+    {
+        SetCurrentHealth(currentHealth + _val);
+    }
+    //=========================================================
+    #endregion
+
+    //---------------------------------------------------------
+    public bool isAlive()
+    {
+        return !dead;
     }
     public void Kill()
     {
-        particleControllerRef.StartParticle(1, deathParticleIndex, RemoveFromScope);
+        if (dead) return;
+        Tentacle[] tentacleArr = GetComponentsInChildren<Tentacle>();
+        for (int i = 0; i < tentacleArr.Length; i++)
+        {
+            tentacleArr[i].targetDist = 0;
+        }
+        particleControllerRef.StopParticle(lowHealthParticleIndex);
+        particleControllerRef.ChangeParent(deathParticleIndex, null);
+        particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
+        
+        particleControllerRef.RemoveParticle(deathParticleIndex, -1);
+
         dead = true;
 
     }
