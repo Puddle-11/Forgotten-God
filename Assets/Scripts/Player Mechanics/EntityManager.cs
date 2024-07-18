@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,11 @@ public class EntityManager : MonoBehaviour
 {
     [SerializeField] private ParticleController particleControllerRef;
     [SerializeField] private Slider healthBar;
-    [SerializeField] private int currentHealth;
+    private int currentHealth;
     [SerializeField] private int maxHealth;
+    [Range(0.0f, 1.0f)]
+    [SerializeField] private float lowHealthThreshhold = 0.1f;
+
     private bool dead = false;
     [SerializeField] private int deathParticleIndex;
     [SerializeField] private int lowHealthParticleIndex;
@@ -32,7 +36,7 @@ public class EntityManager : MonoBehaviour
     {
         if (testParticles)
         {
-            SetCurrentHealth(50);
+            UpdateHealth(-10);
             testParticles = false;
         }
     }
@@ -77,17 +81,27 @@ public class EntityManager : MonoBehaviour
     {
         _val = Math.Clamp(_val, 0, maxHealth);
         currentHealth = _val;
-        if (currentHealth <= maxHealth / 10 || currentHealth== 1)
-        {
-            particleControllerRef.StartParticle(lowHealthParticleIndex);
-        }
-        else
-        {
-            particleControllerRef.StopParticle(lowHealthParticleIndex);
-        }
-        float v = (float)currentHealth / (float)maxHealth;
 
-        healthBar.value = v;
+        
+            if (currentHealth / maxHealth <= lowHealthThreshhold || currentHealth == 1)
+            {
+
+                particleControllerRef.StartParticle(lowHealthParticleIndex);
+            }
+            else
+            {
+                particleControllerRef.StopParticle(lowHealthParticleIndex);
+            }
+        
+
+        
+
+        float v = (float)currentHealth / (float)maxHealth;
+        if (healthBar != null)
+        {
+            healthBar.value = v;
+        }
+        
         if(currentHealth == 0) Kill();
 
     }

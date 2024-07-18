@@ -30,6 +30,7 @@ public class ParticleController : MonoBehaviour
     }
     private void PlayParticle(int _index)
     {
+
         if (IsIndexValid(_index))
         {
             particles[_index].Play();
@@ -38,13 +39,15 @@ public class ParticleController : MonoBehaviour
  
     public void StopParticle(int _index)
     {
-        if (particles.Count > 0 && IsIndexValid(_index))
+
+        if (IsIndexValid(_index))
         {
             particles[_index].Stop();
         }
     }
     public bool ChangeParent(int _index,Transform _newParent)
     {
+
         if (IsIndexValid(_index))
         {
             particles[_index].transform.parent = _newParent;
@@ -57,7 +60,6 @@ public class ParticleController : MonoBehaviour
     }
     public bool RemoveParticle(int _index, float _deletionTime)
     {
-
         if (IsIndexValid(_index))
         {
             if (_deletionTime == -1)
@@ -80,9 +82,9 @@ public class ParticleController : MonoBehaviour
     {
         return RemoveParticle(_index, 0);
     }
-    public bool IsIndexValid(int _index)
+    private bool IsIndexValid(int _index)
     {
-        if (particles.Count > 0 && _index > 0 && _index < particles.Count)
+        if (particles.Count > 0 && _index >= 0 && _index < particles.Count)
         {
             if (particles[_index] == null)
             {
@@ -96,7 +98,7 @@ public class ParticleController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Tried accessing a particle system outside the range");
+            Debug.LogWarning("Tried accessing a particle system outside the range\nAt Index: " + _index);
             return false;
 
         }
