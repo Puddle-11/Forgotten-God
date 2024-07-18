@@ -32,7 +32,7 @@ public class EntityManager : MonoBehaviour
     {
         if (testParticles)
         {
-            SetCurrentHealth(50);
+            UpdateHealth(-10);
             testParticles = false;
         }
     }
