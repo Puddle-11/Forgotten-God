@@ -8,7 +8,7 @@ public class OrbitalEnemyMovement : EntityMovement
     [Header("Orbital Values")]
     [Space]
     [SerializeField] private float lerpDist;
-    public float timer;
+    protected float timer;
     private float weight;
  
     // Start is called before the first frame update
@@ -20,19 +20,23 @@ public class OrbitalEnemyMovement : EntityMovement
     // Update is called once per frame
     public override void Update()
     {
-       
 
-            if (timer > Mathf.PI * 2)
-            {
-                timer = 0;
-            }
-            else
-            {
-                timer += Time.deltaTime * (moveSpeed / MinDist) * weight;
-            }
-     
 
+
+        updateTimer();
         base.Update();
+    }
+    public virtual void updateTimer()
+    {
+        if (timer > Mathf.PI * 2)
+        {
+            timer = 0;
+        }
+        else
+        {
+            timer += Time.deltaTime * (moveSpeed / MinDist) * weight;
+        }
+
     }
     public override float CalculateSpeed()
     {
@@ -66,20 +70,24 @@ public class OrbitalEnemyMovement : EntityMovement
 
             if (weight <= 0)
             {
-
-                //do sin cos calculations to get the proper angle
-                Vector3 p1 = transform.position;
-                Vector3 p2 = target.transform.position;
-                float x = p2.x - p1.x;
-                float y = p2.y - p1.y;
-                float angle = Mathf.Atan2(x, y);
-                timer = angle;
+                SetTimerToAngle();
+              
              
             }
             transform.position = new Vector3(TempPos.x, TempPos.y, transform.position.z);
 
         }
 
+    }
+    public virtual void SetTimerToAngle()
+    {
+        //do sin cos calculations to get the proper angle
+        Vector3 p1 = transform.position;
+        Vector3 p2 = target.transform.position;
+        float x = p2.x - p1.x;
+        float y = p2.y - p1.y;
+        float angle = Mathf.Atan2(x, y);
+        timer = angle;
     }
    
 }

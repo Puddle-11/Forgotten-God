@@ -5,7 +5,7 @@ using UnityEngine;
 public class EntityMovement : MonoBehaviour
 {
     [SerializeField] protected GameObject target;
-    [SerializeField] private bool defaultToPlayer = true;
+    [SerializeField] protected bool defaultToPlayer = true;
     [Space]
     [Header("Movement")]
     [Space]
@@ -17,12 +17,13 @@ public class EntityMovement : MonoBehaviour
 
     private void Awake()
     {
+        
         TryGetComponent<EntityManager>(out Enman);
-
     }
-    private void Start()
+
+    public virtual void Start()
     {
-        if (defaultToPlayer)
+        if (defaultToPlayer && target == null)
         {
            target = GlobalManager.Player;
         }

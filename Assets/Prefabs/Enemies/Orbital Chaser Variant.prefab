@@ -54,6 +54,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2989993715875643465, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+    - {fileID: 5576663143286675226, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+    - {fileID: 1228884440016750324, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+    - {fileID: 7402053458155334405, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -84,3 +87,4 @@ MonoBehaviour:
   moveSpeed: 10
   AccelerationSpeed: 0.25
   lerpDist: 10
+  timer: 0
