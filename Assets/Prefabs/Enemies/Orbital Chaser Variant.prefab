@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2564295179108028482
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.011767664
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.9999308
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3544430451398872394, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_Name
+      value: Orbital Chaser Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2989993715875643465, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3544430451398872394, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2776647339892834720}
+  m_SourcePrefab: {fileID: 100100000, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+--- !u!1 &1343880657374158088 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3544430451398872394, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+  m_PrefabInstance: {fileID: 2564295179108028482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2776647339892834720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343880657374158088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d00c4cfbace382499cf818bfa974ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  defaultToPlayer: 1
+  MinDist: 10
+  moveSpeed: 10
+  AccelerationSpeed: 0.25
+  lerpDist: 10

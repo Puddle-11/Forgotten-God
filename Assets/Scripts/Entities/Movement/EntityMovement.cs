@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class EntityMovement : MonoBehaviour
 {
-    public GameObject target;
-    public SpriteRenderer Sprite;
+    [SerializeField] protected GameObject target;
     [SerializeField] private bool defaultToPlayer = true;
     [Space]
     [Header("Movement")]
     [Space]
     [SerializeField] protected float MinDist = 10;
     [SerializeField] protected float moveSpeed = 10; 
-    protected float currentSpeed;
     [SerializeField] protected float AccelerationSpeed = 0.25f;
+    protected float currentSpeed;
     protected EntityManager Enman;
+
     private void Awake()
     {
         TryGetComponent<EntityManager>(out Enman);
@@ -22,16 +22,16 @@ public class EntityMovement : MonoBehaviour
     }
     private void Start()
     {
-        Debug.Log("start called");
         if (defaultToPlayer)
         {
            target = GlobalManager.Player;
         }
     }
-    private void FixedUpdate()
+    public GameObject GetTarget()
     {
-        currentSpeed = CalculateSpeed();
+        return target;
     }
+
     public virtual float CalculateSpeed()
     {
         if (Enman != null && Enman.isAlive())
@@ -43,9 +43,13 @@ public class EntityMovement : MonoBehaviour
             return 0;
         }
     }
-    void Update()
+    public virtual void Update()
     {
         Move();
+    }
+    public virtual void FixedUpdate()
+    {
+        currentSpeed = CalculateSpeed();
 
     }
     public virtual void Move()

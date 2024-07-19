@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class RotateToTarget : MonoBehaviour
 {
-   public GameObject target;
+    [SerializeField] private GameObject target;
     [SerializeField] private bool defaultToPlayer = true;
-    public float rotationSpeed;
+    [SerializeField] private float rotationSpeed;
     private void Start()
     {
         EntityMovement outE;
-        if (TryGetComponent<EntityMovement>(out outE) && outE.target != null)
+        if (TryGetComponent<EntityMovement>(out outE) && outE.GetTarget() != null)
         {
 
-            target = GetComponent<EntityMovement>().target;
+            target = GetComponent<EntityMovement>().GetTarget();
         }
         else if (target == null && GlobalManager.Player != null && defaultToPlayer)
         {
