@@ -47,5 +47,13 @@ public class ClusterEntityMovement : OrbitalEnemyMovement
         base.Update();
         
     }
+    public override float CalculateSpeed()
+    {
+        return base.CalculateSpeed();
+    }
+    public override void Move()
+    {
+        base.Move();
+    }
 
 }
