@@ -14,40 +14,20 @@ using UnityEngine.Rendering;
 public class LevelGeneration : MonoBehaviour
 {
     public static LevelGeneration LevelGenRef;
-    //singleton reference to the level generator
-
     [SerializeField] private RoomPreset currentPreset;
-    //biome variables
-
     [SerializeField] private LayerValues[] layers;
-    //layer values array. stores the value for each layer
-    //LayerValues is a struct located at the bottom of this script
-
     [SerializeField] private PolygonCollider2D cameraConfiner;
-    //Bounds for the camera so it stays inside the level
-
     [SerializeField] private CinemachineConfiner2D cinemachineCam;
-    //Main Camera for the scene
-
     [SerializeField] private SpriteRenderer Backdrop;
-    //Background
-
     [SerializeField] private float backdropScale;
-    //Size of the background
-
     public GameObject entrance;
-    //Current Entrance
-
     [SerializeField] private GameObject entrancePrefab;
-    //Prefab to make the current entrance
-
     private System.Random rand;
-    //Random seed
-
+    public bool regenerate;
+    public bool runPathfinder;
     [SerializeField] private int exitLayer;
     [SerializeField] private GameObject exitPrefab1, exitPrefab2, exitPrefab3, exitPrefab4;
     [SerializeField] private GameObject ditherMask;
-    //Mask to make the player visible behind grass and leaves
     private List<GameObject> levelGarbage = new List<GameObject>();
     private void Awake()
     {
@@ -63,8 +43,16 @@ public class LevelGeneration : MonoBehaviour
     }
     private void Update()
     {
-      
-      
+        if (runPathfinder)
+        {
+            PathFind(new Vector2Int(0,1));
+            runPathfinder = false;
+        }
+        if (regenerate)
+        {
+            Generate();
+            regenerate = false;
+        }
     }
 
     public void Generate()
@@ -99,6 +87,7 @@ public class LevelGeneration : MonoBehaviour
     }
     private void UpdateConfiner(LayerValues _layer, PolygonCollider2D _collider)
     {
+        
         Vector2 c1 = _layer.L_baseTilemap.CellToWorld(new Vector3Int(_layer.L_bounds.CellX.max, _layer.L_bounds.CellY.max, 0));
         Vector2 c2 = _layer.L_baseTilemap.CellToWorld(new Vector3Int(_layer.L_bounds.CellX.min + 1, _layer.L_bounds.CellY.max, 0));
         Vector2 c3 = _layer.L_baseTilemap.CellToWorld(new Vector3Int(_layer.L_bounds.CellX.min + 1, _layer.L_bounds.CellY.min + 1, 0));
@@ -245,7 +234,15 @@ public class LevelGeneration : MonoBehaviour
         levelGarbage.Add(entrance);
         poPos.RemoveAt(posIndex2);
     }
- 
+    public void PathFind(Vector2Int _Pos)
+    {
+        List<Vector2Int> breakpoints = new List<Vector2Int>() { _Pos };  
+    }
+    private void RunBreakpoint(Vector2Int _Pos, ref List<Vector2Int> breakpoints)
+    {
+
+    }
+
     #region GenerateGround Method and Overloads
     public void GenerateGround(TBounds _bounds, Tilemap[] _tilemaps, TileBase[] _tiles, float _height, float _falloff, float _magnitude, float _frequency, int _seed)
     {
