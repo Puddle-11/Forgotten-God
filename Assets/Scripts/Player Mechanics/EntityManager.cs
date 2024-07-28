@@ -32,7 +32,7 @@ public class EntityManager : MonoBehaviour
         }
         SetHealth(maxHealth);
     }
-    public void Update()
+    public virtual void Update()
     {
         if (testParticles)
         {
@@ -139,7 +139,7 @@ public class EntityManager : MonoBehaviour
         particleControllerRef.RemoveParticle(deathParticleIndex, -1);
         dead = true;
     }
-    public void RemoveFromScope()
+    public virtual void RemoveFromScope()
     {
         Destroy(gameObject);
     }

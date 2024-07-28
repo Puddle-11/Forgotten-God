@@ -5,26 +5,29 @@ using TarodevController;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : EntityManager
 {
    
     public TarodevController.PlayerController playerControllerRef;
-    public bool inBlockLayerOne, inBlockLayerTwo;
+    private bool inBlockLayerOne, inBlockLayerTwo;
     public Vector2 entranceOffset;
     [SerializeField] private float teleportDelay;
     [SerializeField] private SpriteRenderer[] ConnectedSprites;
     [SerializeField] private Image[] ConnectedImages;
     [SerializeField] private GameObject progressBar;
-    private float teleportTimer;
     [SerializeField] private float lowerThreshold;
+
+
+    private float teleportTimer;
     private void Start()
     {
         GlobalManager.globalManagerRef.GetInteractionManager().staticInteractions.Add(new Interaction(MoveToEntrance, progressBar, teleportDelay, -1, GlobalManager.globalManagerRef.moveToEntranceKey));
     }
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         RunSafety();
-       // RunMoveEntrance();
+
     }
     private void RunSafety()
     {
@@ -33,32 +36,10 @@ public class PlayerManager : MonoBehaviour
             MoveToEntrance();
         }
     }
-    public void RunMoveEntrance()
-    {
-
-
-        if (Input.GetKey(GlobalManager.globalManagerRef.moveToEntranceKey))
-        {
-            teleportTimer += Time.deltaTime;
-        }
-        else if (teleportTimer > 0)
-        {
-            teleportTimer -= Time.deltaTime;
-        }
-        else if (teleportTimer < 0)
-        {
-            teleportTimer = 0;
-        }
-        if (teleportTimer >= teleportDelay)
-        {
-            MoveToEntrance();
-            teleportTimer = 0;
-        }
-       // progressBar.fillAmount = teleportTimer / teleportDelay;
-
-    }
     public void UpdateSprite(bool _val)
     {
+
+
         Material mat = _val ? ColorManager.CMref.playerLayerOneMat : ColorManager.CMref.playerLayerTwoMat;
         foreach (SpriteRenderer Sp in ConnectedSprites)
         {
@@ -69,6 +50,10 @@ public class PlayerManager : MonoBehaviour
             Im.material = mat;
         }
     }
+
+
+
+
     public void ChangeGround(LayerMask _newGround)
     {
         playerControllerRef.UpdateGround(_newGround);
