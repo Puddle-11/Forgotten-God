@@ -12,7 +12,6 @@ public class LockTransform : MonoBehaviour
     [SerializeField] private Vector3 offset;
     private void Awake()
     {
-        
         if(_parent == null)
         {
             _parent = transform.parent;

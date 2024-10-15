@@ -21,11 +21,13 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private float killTime;
     public bool testParticles;
 
+
     private void Start()
     {
+        LevelGeneration.instance.GenerateDitherMask(transform, Vector2.zero);
         if (particleControllerRef == null)
         {
-            if (!TryGetComponent<ParticleController>(out particleControllerRef))
+            if (!TryGetComponent(out particleControllerRef))
             {
                 Debug.LogWarning("No particle controller found. Please manually asign in inspector");
             }

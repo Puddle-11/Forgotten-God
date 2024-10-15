@@ -42,6 +42,6 @@ public class RoomExit : MonoBehaviour
     }
     private void EnterPortal()
     {
-       GlobalManager.globalManagerRef.GetUIManager().BeginFade(1, LevelGeneration.LevelGenRef.Generate);
+       GlobalManager.globalManagerRef.GetUIManager().BeginFade(1, LevelGeneration.instance.Generate);
     }
 }

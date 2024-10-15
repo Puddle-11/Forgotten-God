@@ -40,7 +40,7 @@ public class PlayerManager : EntityManager
     {
 
 
-        Material mat = _val ? ColorManager.CMref.playerLayerOneMat : ColorManager.CMref.playerLayerTwoMat;
+        Material mat = _val ? ColorManager.instance.playerLayerOneMat : ColorManager.instance.playerLayerTwoMat;
         foreach (SpriteRenderer Sp in ConnectedSprites)
         {
             Sp.material = mat;
@@ -67,10 +67,14 @@ public class PlayerManager : EntityManager
     }
     public void MoveToEntrance()
     {
-        if (LevelGeneration.LevelGenRef != null && LevelGeneration.LevelGenRef.entrance != null)
+        if (LevelGeneration.instance != null && LevelGeneration.instance.GetCurrentEntrance() != null)
         {
-            transform.position = LevelGeneration.LevelGenRef.entrance.transform.position + (Vector3)entranceOffset;
+            transform.position = GetRespawnPosition();
             GlobalManager.globalManagerRef.GetLayerManager().ChangeLayers(0);
         }
+    }
+    public Vector3 GetRespawnPosition()
+    {
+        return LevelGeneration.instance.GetCurrentEntrance().transform.position + (Vector3)entranceOffset;
     }
 }

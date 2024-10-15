@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityMovement : MonoBehaviour
@@ -14,11 +15,13 @@ public class EntityMovement : MonoBehaviour
     [SerializeField] protected float AccelerationSpeed = 0.25f;
     protected float currentSpeed;
     protected EntityManager Enman;
-
+    public List<Transform> nearbyObjects;
+    [SerializeField] private float avoidanceFalloff  = 1;
+    [SerializeField] private float avoidanceStrength = 1;
     private void Awake()
     {
         
-        TryGetComponent<EntityManager>(out Enman);
+        TryGetComponent(out Enman);
     }
 
     public virtual void Start()
@@ -28,21 +31,32 @@ public class EntityMovement : MonoBehaviour
            target = GlobalManager.Player;
         }
     }
-    public GameObject GetTarget()
+
+    public void OnTriggerEnter2D(Collider2D collision)
     {
-        return target;
+        if(collision.TryGetComponent(out EntityManager _enManRef))
+        {
+            nearbyObjects.Add(collision.transform);
+        }
     }
 
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (nearbyObjects.Contains(collision.transform))
+        {
+            nearbyObjects.Remove(collision.transform);
+        }
+    }
+
+
+    public GameObject GetTarget() {return target;}
     public virtual float CalculateSpeed()
     {
         if (Enman != null && Enman.isAlive())
         {
              return Vector2.Distance(transform.position, target.transform.position) > MinDist ? Mathf.MoveTowards(currentSpeed, moveSpeed, AccelerationSpeed) : Mathf.MoveTowards(currentSpeed, 0, AccelerationSpeed);
         }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
     public virtual void Update()
     {
@@ -51,7 +65,6 @@ public class EntityMovement : MonoBehaviour
     public virtual void FixedUpdate()
     {
         currentSpeed = CalculateSpeed();
-
     }
     public virtual void Move()
     {
@@ -60,11 +73,13 @@ public class EntityMovement : MonoBehaviour
             Vector2 TempPos = transform.position;
             if (moveSpeed > 0)
             {
+                Vector2 dir = (target.transform.position - transform.position).normalized;
 
-                TempPos = Vector2.MoveTowards(transform.position, target.transform.position, currentSpeed * Time.deltaTime);
+
+                TempPos = (Vector2)transform.position + (dir  ) * currentSpeed * Time.deltaTime;
                 transform.position = new Vector3(TempPos.x, TempPos.y, transform.position.z);
-
             }
         }
     }
+
 }
