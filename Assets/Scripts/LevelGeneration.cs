@@ -20,6 +20,7 @@ public class LevelGeneration : MonoBehaviour
 
     [Header("Critical")]
     [SerializeField] private RoomPreset currentPreset;
+    [SerializeField] private PerRoomVars roomVars;
     [SerializeField] private LayerValues[] layers;
 
     [Header("------------------")]
@@ -46,7 +47,7 @@ public class LevelGeneration : MonoBehaviour
     private GameObject entrance;
     private System.Random rand;
     private List<GameObject> levelGarbage = new List<GameObject>();
-    private List<Vector2Int> allPositions;
+    public List<Vector2Int> allPositions;
 
 
 
@@ -133,9 +134,11 @@ public class LevelGeneration : MonoBehaviour
     }
     private void SpawnEnemies()
     {
+        if (enemyPool.Length <= 0) return;
         for (int i = 0; i < 5; i++)
         {
             int positionIndex = UnityEngine.Random.Range(0, allPositions.Count);
+
             levelGarbage.Add(Instantiate(enemyPool[0], layers[exitLayer].L_decorTilemap.CellToWorld((Vector3Int)allPositions[positionIndex]), quaternion.identity));
         }
     }
@@ -253,6 +256,7 @@ public class LevelGeneration : MonoBehaviour
                 }
             }
         }
+
         int posIndex2 = UnityEngine.Random.Range(0, poPos.Count());
         Vector2 worldPos2 = TMap.CellToWorld((Vector3Int)poPos[posIndex2]) + (Vector3)_tileOffset;
         GameObject entranceObj = Instantiate(entrancePrefab, worldPos2, quaternion.identity);
@@ -262,10 +266,13 @@ public class LevelGeneration : MonoBehaviour
     }
     private void GenerateExits(int _index, int _exitNum, Vector2 _tileOffset, List<Vector2Int> poPosI)
     {
+        if (exitPrefabs.Length <= 0) return;
+
         Tilemap TMap = layers[_index].L_baseTilemap;
    
         for (int i = 0; i < _exitNum; i++)
         {
+            if (poPosI.Count <= 0) break;
             int posIndex = UnityEngine.Random.Range(0, poPosI.Count());
             int exitIndex = UnityEngine.Random.Range(0, exitPrefabs.Length);
             Vector2 worldPos = TMap.CellToWorld((Vector3Int)poPosI[posIndex]) + (Vector3)_tileOffset;
