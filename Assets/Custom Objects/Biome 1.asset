@@ -21,7 +21,7 @@ MonoBehaviour:
   - {fileID: 5653544750907460700, guid: 8df5c856fe13fc042a3748c93b721315, type: 3}
   - {fileID: 1903591997297309579, guid: 8184c7e9da470144884e5c96c93fc2a2, type: 3}
   godRayCount: {x: 2, y: 7}
-  maxExits: 1
+  maxExits: 3
   layerValues:
   - L_Name: Foreground
     L_terrainScale: 24
