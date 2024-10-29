@@ -25,8 +25,6 @@ public class LevelGeneration : MonoBehaviour
 
     [Header("------------------")]
     [Header("Prefabs")]
-    [SerializeField] private GameObject[] exitPrefabs;
-    [SerializeField] public GameObject[] enemyPool;
 
     [Space]
     [SerializeField] private GameObject entrancePrefab;
@@ -42,7 +40,7 @@ public class LevelGeneration : MonoBehaviour
     [Header("------------------")]
     [SerializeField] private int exitLayer;
     [SerializeField] private int smallestLevel;
-
+    [SerializeField]private PerRoomVars perRoomVars;
 
     private GameObject entrance;
     private System.Random rand;
@@ -50,7 +48,15 @@ public class LevelGeneration : MonoBehaviour
     public List<Vector2Int> allPositions;
 
 
-
+    public void SetPerRoomVars(PerRoomVars _val)
+    {
+        if(_val == null)
+        {
+            Debug.LogWarning("Per Room Variables can not be null");
+            return;
+        }
+        perRoomVars = _val;
+    }
     private void Awake()
     {
         if (instance == null)
@@ -121,7 +127,7 @@ public class LevelGeneration : MonoBehaviour
                 yield break;
             }
             allPositions = FilterPositions(MR.allPositions);
-            GenerateExits(exitLayer, currentPreset.maxExits, new Vector2(1, 1f), allPositions);
+            GenerateExits(exitLayer, perRoomVars.exitCountRange.x, new Vector2(1, 1f), allPositions);
             SpawnEnemies();
         }
         GlobalManager.Player.SetActive(false);
@@ -134,12 +140,12 @@ public class LevelGeneration : MonoBehaviour
     }
     private void SpawnEnemies()
     {
-        if (enemyPool.Length <= 0) return;
+        if (perRoomVars.enemyPool.Length <= 0) return;
         for (int i = 0; i < 5; i++)
         {
             int positionIndex = UnityEngine.Random.Range(0, allPositions.Count);
 
-            levelGarbage.Add(Instantiate(enemyPool[0], layers[exitLayer].L_decorTilemap.CellToWorld((Vector3Int)allPositions[positionIndex]), quaternion.identity));
+            levelGarbage.Add(Instantiate(perRoomVars.enemyPool[0], layers[exitLayer].L_decorTilemap.CellToWorld((Vector3Int)allPositions[positionIndex]), quaternion.identity));
         }
     }
     private void UpdateConfiner(LayerValues _layer, PolygonCollider2D _collider)
@@ -266,7 +272,7 @@ public class LevelGeneration : MonoBehaviour
     }
     private void GenerateExits(int _index, int _exitNum, Vector2 _tileOffset, List<Vector2Int> poPosI)
     {
-        if (exitPrefabs.Length <= 0) return;
+        if (perRoomVars.exitPrefabs.Length <= 0) return;
 
         Tilemap TMap = layers[_index].L_baseTilemap;
    
@@ -274,10 +280,10 @@ public class LevelGeneration : MonoBehaviour
         {
             if (poPosI.Count <= 0) break;
             int posIndex = UnityEngine.Random.Range(0, poPosI.Count());
-            int exitIndex = UnityEngine.Random.Range(0, exitPrefabs.Length);
+            int exitIndex = UnityEngine.Random.Range(0, perRoomVars.exitPrefabs.Length);
             Vector2 worldPos = TMap.CellToWorld((Vector3Int)poPosI[posIndex]) + (Vector3)_tileOffset;
 
-            GameObject exit = Instantiate(exitPrefabs[exitIndex], worldPos, quaternion.identity);
+            GameObject exit = Instantiate(perRoomVars.exitPrefabs[exitIndex], worldPos, quaternion.identity);
             levelGarbage.Add(exit);
             GenerateDitherMask(exit.transform);
             

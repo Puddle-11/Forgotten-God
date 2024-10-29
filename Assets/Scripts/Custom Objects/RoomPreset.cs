@@ -13,7 +13,6 @@ public class RoomPreset : ScriptableObject
     public Sprite colorTexture;
     public GameObject[] godRay;
     public Vector2Int godRayCount;
-    public int maxExits;
 
     public BiomeLayer[] layerValues;
 
