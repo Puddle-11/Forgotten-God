@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPool: []
   exitPrefabs:
-  - {fileID: 6016354940600120095, guid: f31cac1502528b94eaeaf46d9b34e619, type: 3}
+  - {fileID: 6016354940600120095, guid: 85c00549823ca804083bdb3611b38b18, type: 3}
+  - {fileID: 6016354940600120095, guid: 1338390f45f44c64c96f81fd4f3272a2, type: 3}
   - {fileID: 6016354940600120095, guid: ed1079372aa0eab4193c0718b73850c3, type: 3}
   exitCountRange: {x: 3, y: 1}
   enemyCountRange: {x: 1, y: 1}
