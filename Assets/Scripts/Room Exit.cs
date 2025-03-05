@@ -25,7 +25,6 @@ public class RoomExit : MonoBehaviour
         {
             GlobalManager.globalManagerRef.GetInteractionManager().SetAction(objectInteraction);
 
-           // GlobalManager.globalManagerRef.GetInteractionManager().SetAction(EnterPortal, 1, prompt, 1);
         }
     }
     public void OnTriggerExit2D(Collider2D collision)
@@ -37,7 +36,7 @@ public class RoomExit : MonoBehaviour
     }
     private void EnterPortal()
     {
-        LevelGeneration.instance.SetPerRoomVars(_roomVars);
+       LevelGeneration.instance.SetPerRoomVars(_roomVars);
        GlobalManager.globalManagerRef.GetUIManager().BeginFade(1, LevelGeneration.instance.Generate);
     }
 }

@@ -31,6 +31,7 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField] private GameObject ditherMask;
     [Header("------------------")]
 
+
     [Header("References")]
     [Header("------------------")]
     [SerializeField] private PolygonCollider2D cameraConfiner;
@@ -41,10 +42,13 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField] private int exitLayer;
     [SerializeField] private int smallestLevel;
     [SerializeField]private PerRoomVars perRoomVars;
+    [SerializeField] private float enemySpawnDelay;
+    [SerializeField] private float playerDelay;
 
     private GameObject entrance;
     private System.Random rand;
     private List<GameObject> levelGarbage = new List<GameObject>();
+    private List<GameObject> exitList = new List<GameObject>();
     public List<Vector2Int> allPositions;
 
 
@@ -57,6 +61,7 @@ public class LevelGeneration : MonoBehaviour
         }
         perRoomVars = _val;
     }
+
     private void Awake()
     {
         if (instance == null)
@@ -107,8 +112,7 @@ public class LevelGeneration : MonoBehaviour
         GenerateGodRays(transform);
         UpdateConfiner(layers[1], cameraConfiner);
         UpdateBackdrop(layers[0].L_bounds);
-            GenerateEntrance(exitLayer, new Vector2(1, 1f));
-
+        GenerateEntrance(exitLayer, new Vector2(1, 1f));
 
         StopCoroutine("finalizeDelay");
         
@@ -132,11 +136,13 @@ public class LevelGeneration : MonoBehaviour
         }
         GlobalManager.Player.SetActive(false);
         GlobalManager.Player.GetComponent<PlayerManager>().MoveToEntrance();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(playerDelay);
 
 
         GlobalManager.globalManagerRef.layerManagerRef.ChangeLayers(0);
         GlobalManager.Player.SetActive(true);
+        yield return new WaitForSeconds(enemySpawnDelay);
+        GenerateEntities();
     }
     private void SpawnEnemies()
     {
@@ -160,7 +166,11 @@ public class LevelGeneration : MonoBehaviour
         cinemachineCam.m_BoundingShape2D = null;
 
         cinemachineCam.m_BoundingShape2D = _collider;
-
+    }
+    private void GenerateEntities()
+    {
+        float diff = UnityEngine.Random.Range( perRoomVars.difficultyRange.x, perRoomVars.difficultyRange.y);
+        EnemyManager.instance.SummonEntities(diff);
 
     }
     private void UpdateBackdrop(TBounds _bounds)
@@ -272,6 +282,7 @@ public class LevelGeneration : MonoBehaviour
     }
     private void GenerateExits(int _index, int _exitNum, Vector2 _tileOffset, List<Vector2Int> poPosI)
     {
+        CleanExitList();
         if (perRoomVars.exitPrefabs.Length <= 0) return;
 
         Tilemap TMap = layers[_index].L_baseTilemap;
@@ -285,9 +296,28 @@ public class LevelGeneration : MonoBehaviour
 
             GameObject exit = Instantiate(perRoomVars.exitPrefabs[exitIndex], worldPos, quaternion.identity);
             levelGarbage.Add(exit);
+            exitList.Add(exit);
+            exit.SetActive(false);
             GenerateDitherMask(exit.transform);
             
             poPosI.RemoveAt(posIndex);
+        }
+    }
+    private void CleanExitList()
+    {
+        for (int i = 0; i < exitList.Count; i++)
+        {
+
+            Destroy(exitList[i]);
+        }
+        exitList.Clear();
+    }
+    public void OpenExits()
+    {
+        for (int i = 0; i < exitList.Count; i++)
+        {
+
+            exitList[i].SetActive(true);
         }
     }
     public void GenerateDitherMask(Transform _followTarget, int _layer = 0)

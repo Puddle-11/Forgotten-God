@@ -21,7 +21,6 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private float killTime;
     public bool testParticles;
 
-
     private void Start()
     {
         LevelGeneration.instance.GenerateDitherMask(transform, Vector2.zero);
@@ -36,6 +35,7 @@ public class EntityManager : MonoBehaviour
     }
     public virtual void Update()
     {
+        
         if (testParticles)
         {
             UpdateHealth(-10);
@@ -139,11 +139,13 @@ public class EntityManager : MonoBehaviour
         particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
 
         particleControllerRef.RemoveParticle(deathParticleIndex, -1);
+
         dead = true;
     }
     public virtual void RemoveFromScope()
     {
         Destroy(gameObject);
+        EnemyManager.instance.RemoveFromActive(gameObject);
     }
 
 }
