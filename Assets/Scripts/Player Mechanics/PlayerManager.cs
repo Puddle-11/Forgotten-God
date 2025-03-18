@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerManager : EntityManager
 {
-   
+    [SerializeField] private bool respawnable;
     public TarodevController.PlayerController playerControllerRef;
     private bool inBlockLayerOne, inBlockLayerTwo;
     public Vector2 entranceOffset;
@@ -77,4 +77,27 @@ public class PlayerManager : EntityManager
     {
         return LevelGeneration.instance.GetCurrentEntrance().transform.position + (Vector3)entranceOffset;
     }
+    
+    public override void Kill()
+    {
+        if (dead) return;
+        
+        particleControllerRef.StopParticle(lowHealthParticleIndex);
+        
+        ParticleSystem newPS = Instantiate(particleControllerRef.GetParticle(deathParticleIndex).gameObject, transform.position,
+                                           Quaternion.identity, null).GetComponent<ParticleSystem>();
+        
+        int index = particleControllerRef.AddParticle(newPS);
+        
+        particleControllerRef.ChangeParent(index, null);
+        particleControllerRef.StartParticle(killTime, index, Respawn);
+        
+        particleControllerRef.RemoveParticle(index, -1);
+    }
+    
+    public void Respawn()
+    {
+        
+    }
+    
 }

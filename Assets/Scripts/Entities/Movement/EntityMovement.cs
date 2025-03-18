@@ -52,9 +52,11 @@ public class EntityMovement : MonoBehaviour
     public GameObject GetTarget() {return target;}
     public virtual float CalculateSpeed()
     {
+        
         if (Enman != null && Enman.isAlive())
         {
-             return Vector2.Distance(transform.position, target.transform.position) > MinDist ? Mathf.MoveTowards(currentSpeed, moveSpeed, AccelerationSpeed) : Mathf.MoveTowards(currentSpeed, 0, AccelerationSpeed);
+            
+             return (target != null && Vector2.Distance(transform.position, target.transform.position) > MinDist) ? Mathf.MoveTowards(currentSpeed, moveSpeed, AccelerationSpeed) : Mathf.MoveTowards(currentSpeed, 0, AccelerationSpeed);
         }
         return 0;
     }

@@ -8,17 +8,17 @@ using UnityEngine;
 using UnityEngine.UI;
 public class EntityManager : MonoBehaviour
 {
-    [SerializeField] private ParticleController particleControllerRef;
+    [SerializeField] protected ParticleController particleControllerRef;
     [SerializeField] private Slider healthBar;
     private int currentHealth;
     [SerializeField] private int maxHealth;
     [Range(0.0f, 1.0f)]
     [SerializeField] private float lowHealthThreshhold = 0.1f;
 
-    private bool dead = false;
-    [SerializeField] private int deathParticleIndex;
-    [SerializeField] private int lowHealthParticleIndex;
-    [SerializeField] private float killTime;
+    protected bool dead = false;
+    [SerializeField] protected int deathParticleIndex;
+    [SerializeField] protected int lowHealthParticleIndex;
+    [SerializeField] protected float killTime;
     public bool testParticles;
 
     private void Start()
@@ -126,7 +126,8 @@ public class EntityManager : MonoBehaviour
     {
         return !dead;
     }
-    public void Kill()
+    
+    public virtual void Kill()
     {
         if (dead) return;
         Tentacle[] tentacleArr = GetComponentsInChildren<Tentacle>();

@@ -20,15 +20,21 @@ public class InteractionManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (GlobalManager.Player.transform.position.x > playerPastPos.x + playerMovementMargin || GlobalManager.Player.transform.position.y > playerPastPos.y + playerMovementMargin || GlobalManager.Player.transform.position.y < playerPastPos.y - playerMovementMargin || GlobalManager.Player.transform.position.x < playerPastPos.x - playerMovementMargin)
+        if (GlobalManager.Player != null)
         {
-            moving = true;
+            if (GlobalManager.Player.transform.position.x > playerPastPos.x + playerMovementMargin ||
+                GlobalManager.Player.transform.position.y > playerPastPos.y + playerMovementMargin ||
+                GlobalManager.Player.transform.position.y < playerPastPos.y - playerMovementMargin ||
+                GlobalManager.Player.transform.position.x < playerPastPos.x - playerMovementMargin)
+            {
+                moving = true;
+            }
+            else
+            {
+                moving = false;
+            }
+            playerPastPos = GlobalManager.Player.transform.position;
         }
-        else
-        {
-            moving = false;
-        }
-        playerPastPos = GlobalManager.Player.transform.position;
     }
     private void runTimerLogic(Interaction _interaction)
     {
