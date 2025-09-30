@@ -5,26 +5,29 @@ using TarodevController;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : EntityManager
 {
-   
+    [SerializeField] private bool respawnable;
     public TarodevController.PlayerController playerControllerRef;
-    public bool inBlockLayerOne, inBlockLayerTwo;
+    private bool inBlockLayerOne, inBlockLayerTwo;
     public Vector2 entranceOffset;
     [SerializeField] private float teleportDelay;
     [SerializeField] private SpriteRenderer[] ConnectedSprites;
     [SerializeField] private Image[] ConnectedImages;
     [SerializeField] private GameObject progressBar;
-    private float teleportTimer;
     [SerializeField] private float lowerThreshold;
+
+
+    private float teleportTimer;
     private void Start()
     {
-        GlobalManager.globalManagerRef.GetInteractionManager().staticInteractions.Add(new Interaction(MoveToEntrance, progressBar, teleportDelay, -1, GlobalManager.globalManagerRef.moveToEntranceKey));
+        if(GlobalManager.globalManagerRef != null && GlobalManager.globalManagerRef.GetInteractionManager() != null) GlobalManager.globalManagerRef.GetInteractionManager().staticInteractions.Add(new Interaction(MoveToEntrance, progressBar, teleportDelay, -1, GlobalManager.globalManagerRef.moveToEntranceKey));
     }
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         RunSafety();
-       // RunMoveEntrance();
+
     }
     private void RunSafety()
     {
@@ -33,33 +36,11 @@ public class PlayerManager : MonoBehaviour
             MoveToEntrance();
         }
     }
-    public void RunMoveEntrance()
-    {
-
-
-        if (Input.GetKey(GlobalManager.globalManagerRef.moveToEntranceKey))
-        {
-            teleportTimer += Time.deltaTime;
-        }
-        else if (teleportTimer > 0)
-        {
-            teleportTimer -= Time.deltaTime;
-        }
-        else if (teleportTimer < 0)
-        {
-            teleportTimer = 0;
-        }
-        if (teleportTimer >= teleportDelay)
-        {
-            MoveToEntrance();
-            teleportTimer = 0;
-        }
-       // progressBar.fillAmount = teleportTimer / teleportDelay;
-
-    }
     public void UpdateSprite(bool _val)
     {
-        Material mat = _val ? ColorManager.CMref.playerLayerOneMat : ColorManager.CMref.playerLayerTwoMat;
+
+
+        Material mat = _val ? ColorManager.instance.playerLayerOneMat : ColorManager.instance.playerLayerTwoMat;
         foreach (SpriteRenderer Sp in ConnectedSprites)
         {
             Sp.material = mat;
@@ -69,6 +50,10 @@ public class PlayerManager : MonoBehaviour
             Im.material = mat;
         }
     }
+
+
+
+
     public void ChangeGround(LayerMask _newGround)
     {
         playerControllerRef.UpdateGround(_newGround);
@@ -82,10 +67,37 @@ public class PlayerManager : MonoBehaviour
     }
     public void MoveToEntrance()
     {
-        if (LevelGeneration.LevelGenRef != null && LevelGeneration.LevelGenRef.entrance != null)
+        if (LevelGeneration.instance != null && LevelGeneration.instance.GetCurrentEntrance() != null)
         {
-            transform.position = LevelGeneration.LevelGenRef.entrance.transform.position + (Vector3)entranceOffset;
+            transform.position = GetRespawnPosition();
             GlobalManager.globalManagerRef.GetLayerManager().ChangeLayers(0);
         }
     }
+    public Vector3 GetRespawnPosition()
+    {
+        return LevelGeneration.instance.GetCurrentEntrance().transform.position + (Vector3)entranceOffset;
+    }
+    
+    public override void Kill()
+    {
+        if (dead) return;
+        
+        particleControllerRef.StopParticle(lowHealthParticleIndex);
+        
+        ParticleSystem newPS = Instantiate(particleControllerRef.GetParticle(deathParticleIndex).gameObject, transform.position,
+                                           Quaternion.identity, null).GetComponent<ParticleSystem>();
+        
+        int index = particleControllerRef.AddParticle(newPS);
+        
+        particleControllerRef.ChangeParent(index, null);
+        particleControllerRef.StartParticle(killTime, index, Respawn);
+        
+        particleControllerRef.RemoveParticle(index, -1);
+    }
+    
+    public void Respawn()
+    {
+        
+    }
+    
 }

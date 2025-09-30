@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-
+[ExecuteAlways]
 public class ColorManager : MonoBehaviour
 {
-    public static ColorManager CMref;
+    public static ColorManager instance;
     public Sprite mainPalette;
     public Vector2Int size;
     [SerializeField] private Vector2Int playerBodyPos;
@@ -15,20 +15,23 @@ public class ColorManager : MonoBehaviour
 
     private void Awake()
     {
-        if(CMref == null)
-        {
-            CMref = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
         size.x = mainPalette.texture.width;
         size.y= mainPalette.texture.height;
     }
+    private void OnEnable()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(this);
+        }
+    }
     public static bool isValid()
     {
-        return CMref != null;
+        return instance != null;
     }
    
    

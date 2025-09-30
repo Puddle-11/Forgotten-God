@@ -69,8 +69,8 @@ namespace TarodevController {
 
         private void GatherInput() {
             Input = new FrameInput {
-                JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
-                JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
+                JumpDown = UnityEngine.Input.GetKeyDown(KeyCode.Z),
+                JumpUp = UnityEngine.Input.GetKeyUp(KeyCode.Z),
                 X = UnityEngine.Input.GetAxisRaw("Horizontal")
             };
             if (Input.JumpDown) {

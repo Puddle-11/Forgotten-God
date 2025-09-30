@@ -14,7 +14,7 @@ public class PlayerAnimatorController : MonoBehaviour
     [SerializeField] private Animator Anim2;
     [SerializeField] private Animator SAnim;
     [SerializeField] private bool Flip;
-    [SerializeField] private SpriteRenderer SP;
+    [SerializeField] public SpriteRenderer SP;
     [SerializeField] private SpriteRenderer SP2;
     [SerializeField] private SpriteRenderer SSP;
      public bool Grounded;

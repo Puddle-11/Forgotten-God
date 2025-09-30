@@ -8,32 +8,35 @@ using UnityEngine;
 using UnityEngine.UI;
 public class EntityManager : MonoBehaviour
 {
-    [SerializeField] private ParticleController particleControllerRef;
+    [SerializeField] protected ParticleController particleControllerRef;
     [SerializeField] private Slider healthBar;
     private int currentHealth;
     [SerializeField] private int maxHealth;
     [Range(0.0f, 1.0f)]
     [SerializeField] private float lowHealthThreshhold = 0.1f;
 
-    private bool dead = false;
-    [SerializeField] private int deathParticleIndex;
-    [SerializeField] private int lowHealthParticleIndex;
-    [SerializeField] private float killTime;
+    protected bool dead = false;
+    [SerializeField] protected int deathParticleIndex;
+    [SerializeField] protected int lowHealthParticleIndex;
+    [SerializeField] protected float killTime;
     public bool testParticles;
 
-    private void Start()
+    public virtual void Start()
     {
+
+        if (LevelGeneration.instance != null) LevelGeneration.instance.GenerateDitherMask(transform, Vector2.zero);
         if (particleControllerRef == null)
         {
-            if (!TryGetComponent<ParticleController>(out particleControllerRef))
+            if (!TryGetComponent(out particleControllerRef))
             {
                 Debug.LogWarning("No particle controller found. Please manually asign in inspector");
             }
         }
-        SetHealth(maxHealth);
+        SetHealth(maxHealth, false);
     }
-    public void Update()
+    public virtual void Update()
     {
+
         if (testParticles)
         {
             UpdateHealth(-10);
@@ -46,23 +49,21 @@ public class EntityManager : MonoBehaviour
     //=========================================================
     //Set Health Functions
 
-    private void SetHealth(int _mHealth)
+    private void SetHealth(int _mHealth, bool flash = true)
     //sets the max health and current health, takes one health variable for both max and current health
     {
-        SetHealth(_mHealth, _mHealth);
+        SetHealth(_mHealth, _mHealth, flash);
 
     }
-    private void SetHealth(int _mHealth, int _cHealth)
+    private void SetHealth(int _mHealth, int _cHealth, bool flash = true)
     //Overload 1, takes two ints, max health and current health
     {
-        //clamp max health to min 1
-        if (_mHealth < 1) _mHealth = 1;
+
         //set the max health via function
         SetMaxHealth(_mHealth);
-        //clamp the current health between max and 0
-        _cHealth = Math.Clamp(_cHealth, 0, maxHealth);
+
         //set current health via function
-        SetCurrentHealth(_cHealth);
+        SetCurrentHealth(_cHealth, flash);
     }
     //=========================================================
     #endregion 
@@ -75,9 +76,11 @@ public class EntityManager : MonoBehaviour
     //Set Max health and Set current Health
     public void SetMaxHealth(int _val)
     {
+        if (_val < 1) _val = 1;
+
         maxHealth = _val;
     }
-    public void SetCurrentHealth(int _val)
+    public virtual void SetCurrentHealth(int _val, bool flash = true)
     {
         _val = Math.Clamp(_val, 0, maxHealth);
         currentHealth = _val;
@@ -85,16 +88,12 @@ public class EntityManager : MonoBehaviour
         float v = (float)currentHealth / (float)maxHealth;
         if (v <= lowHealthThreshhold || currentHealth == 1)
         {
-
             particleControllerRef.StartParticle(lowHealthParticleIndex);
         }
         else
         {
             particleControllerRef.StopParticle(lowHealthParticleIndex);
         }
-
-
-
 
         if (healthBar != null)
         {
@@ -124,7 +123,8 @@ public class EntityManager : MonoBehaviour
     {
         return !dead;
     }
-    public void Kill()
+
+    public virtual void Kill()
     {
         if (dead) return;
         Tentacle[] tentacleArr = GetComponentsInChildren<Tentacle>();
@@ -137,11 +137,13 @@ public class EntityManager : MonoBehaviour
         particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
 
         particleControllerRef.RemoveParticle(deathParticleIndex, -1);
+
         dead = true;
     }
-    public void RemoveFromScope()
+    public virtual void RemoveFromScope()
     {
         Destroy(gameObject);
+        if (EnemyCoordinator.instance != null) EnemyCoordinator.instance.RemoveFromActive(gameObject);
     }
 
 }

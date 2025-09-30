@@ -176,6 +176,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: ace11db0fa6130046933e2251b637e1d, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: f460f02ecd93f0443869d850b9e787fc, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 8adbe690ae5f7c14cb802c587f092d34, type: 3}
@@ -196,9 +198,11 @@ Tilemap:
   - m_RefCount: 1
     m_Data: {fileID: 21300000, guid: 683b08c1eac51c6429657ba11cf75dce, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: e71faf2baec3eeb4091afe797d8e9650, type: 3}
+    m_Data: {fileID: 21300000, guid: e649259c8bb0ee847bb4a6894c9bf3be, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: 6454b4352ddccf84fbcf36a33f2b6dbf, type: 3}
+    m_Data: {fileID: 21300000, guid: 6ec1a656493f110418989a0fe8ca812b, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 10
     m_Data:
@@ -239,6 +243,8 @@ Tilemap:
   m_TileColorArray:
   - m_RefCount: 11
     m_Data: {r: 1, g: 1, b: 1, a: 1}
+  - m_RefCount: 0
+    m_Data: {r: 5.554336e-19, g: 5.554336e-19, b: 5.554336e-19, a: 5.554336e-19}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -280,6 +286,9 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -357,7 +366,7 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &8594941816890494855
+--- !u!114 &612791438458526795
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

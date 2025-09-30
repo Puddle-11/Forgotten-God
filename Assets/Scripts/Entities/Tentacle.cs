@@ -15,26 +15,24 @@ public class Tentacle : MonoBehaviour
     public float wiggleSpeed;
     public float wiggleMagnitude;
     public Transform wiggleDir;
-    public Transform[] BodyParts;
     [SerializeField] private int col1;
     [SerializeField] private int col2;
     private ObjectPaletteManager objPalette;
     void Start()
     {
-        if(!TryGetComponent<ObjectPaletteManager>(out objPalette) || !transform.parent.TryGetComponent<ObjectPaletteManager>(out objPalette))
+        if (!TryGetComponent<ObjectPaletteManager>(out objPalette) || !transform.parent.TryGetComponent<ObjectPaletteManager>(out objPalette))
         {
-         
-           objPalette = GetComponentInParent<ObjectPaletteManager>();
-        }
-     
 
-            if(objPalette != null)
-            {
-                Linerend.startColor = objPalette.GetColor(col1);
-                Linerend.endColor = objPalette.GetColor(col2);
-            }
-        wiggleSpeed = wiggleSpeed / wiggleMagnitude;
-        wiggleSpeed = Mathf.Abs(wiggleSpeed);
+            objPalette = GetComponentInParent<ObjectPaletteManager>();
+        }
+
+
+        if (objPalette != null)
+        {
+            SetColors( objPalette.GetColor(col1), objPalette.GetColor(col2));
+        }
+
+        wiggleSpeed = Mathf.Abs(wiggleSpeed / wiggleMagnitude);
 
 
         Linerend.positionCount = Length;
@@ -47,15 +45,20 @@ public class Tentacle : MonoBehaviour
             SegmentPoses[i] = SegmentPoses[0];
         }
         Linerend.SetPositions(SegmentPoses);
-        BodyParts = CopyArr(SegmentPoses.Length, BodyParts);
-
-
-
-
-
     }
+    public void SetColors(Color c1, Color c2)
+    {
+        Linerend.startColor = c1;
+        Linerend.endColor = c2;
+    }
+    public Color[] GetColors()
+    {
+        Color[] arr = new Color[2];
+        arr[0] = Linerend.startColor;
 
-
+        arr[1] = Linerend.endColor;
+        return arr;
+    }
     private void FixedUpdate()
     {
         //wiggle function
@@ -70,17 +73,6 @@ public class Tentacle : MonoBehaviour
         for (int i = 1; i < SegmentPoses.Length; i++)
         {
             SegmentPoses[i] = Vector3.SmoothDamp(SegmentPoses[i], SegmentPoses[i - 1] + TargetDir.right * targetDist, ref Segmentv[i], smoothSpeed + i / trailSpeed);
-
-
-            if (BodyParts[i - 1] != null)
-            {
-
-                BodyParts[i - 1].transform.position = new Vector3(SegmentPoses[i].x, SegmentPoses[i].y, BodyParts[i - 1].transform.position.z);
-
-            }
-
-
-
         }
         Linerend.SetPositions(SegmentPoses);
         //------------------------------------
@@ -89,22 +81,5 @@ public class Tentacle : MonoBehaviour
 
 
 
-    public Transform[] CopyArr(int length, Transform[] Origin)
-    {
-        if (length < Origin.Length)
-        {
-            length = Origin.Length;
 
-        }
-        Transform[] Res = new Transform[length];
-        for (int i = 0; i < Origin.Length; i++)
-        {
-            Res[i] = Origin[i];
-
-
-        }
-        return Res;
-
-
-    }
 }

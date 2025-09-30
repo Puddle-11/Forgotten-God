@@ -9,27 +9,22 @@ public class RoomExit : MonoBehaviour
     private bool inPortal;
     private float timer;
     [SerializeField] private GameObject prompt;
+    [SerializeField] private PerRoomVars _roomVars;
     private Interaction objectInteraction;
+
+    public PerRoomVars GetRoomCars() { return _roomVars; }
     private void Start()
     {
         objectInteraction = new Interaction(EnterPortal, prompt, 1, 1, GlobalManager.globalManagerRef.interactionKey);
     }
-    private void Update()
-    {
-       
-   
-    }
-    private void OnDisable()
-    {
-        
-    }
+
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject == GlobalManager.Player)
         {
             GlobalManager.globalManagerRef.GetInteractionManager().SetAction(objectInteraction);
 
-           // GlobalManager.globalManagerRef.GetInteractionManager().SetAction(EnterPortal, 1, prompt, 1);
         }
     }
     public void OnTriggerExit2D(Collider2D collision)
@@ -37,11 +32,11 @@ public class RoomExit : MonoBehaviour
         if(collision.gameObject == GlobalManager.Player)
         {
             GlobalManager.globalManagerRef.GetInteractionManager().ClearAction(objectInteraction);
-
         }
     }
     private void EnterPortal()
     {
-       GlobalManager.globalManagerRef.GetUIManager().BeginFade(1, LevelGeneration.LevelGenRef.Generate);
+       LevelGeneration.instance.SetPerRoomVars(_roomVars);
+       GlobalManager.globalManagerRef.GetUIManager().BeginFade(1, LevelGeneration.instance.Generate);
     }
 }
