@@ -20,9 +20,9 @@ public class ParticleController : MonoBehaviour
 	
 	private IEnumerator ParticleAction(float _delay, int _index, Action _postParticleAction)
 	{
-		PlayParticle(_index);
-		
 		yield return new WaitForSeconds(_delay);
+		PlayParticle(_index);
+		yield return null;
 		if (_postParticleAction != null)
 		{
 			_postParticleAction();

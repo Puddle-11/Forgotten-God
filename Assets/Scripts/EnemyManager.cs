@@ -9,7 +9,9 @@ public class EnemyManager : EntityManager
     [SerializeField] private Color m_flashColor = Color.white;
     [SerializeField] private SpriteRenderer[] m_renderList;
     [SerializeField] private Tentacle[] m_tentacles;
-    [SerializeField] private float flashDelay;
+    [SerializeField] private float flashDelay = 0.1f;
+    [SerializeField] private EntityMovement m_movement;
+
     private bool flashing;
 
 
@@ -30,10 +32,15 @@ public class EnemyManager : EntityManager
         m_tentacles = GetComponentsInChildren<Tentacle>();
         base.Start();
     }
+    public override void TakeKnockback(Vector2 _dir, float _amount, float _duration)
+    {
+        m_movement.StartKnockback(_dir, _amount, _duration);
+    }
     private IEnumerator Flash()
     {
         if (flashing) yield break;
         flashing = true;
+
         Color[] originalColors_S = new Color[m_renderList.Length];
         Color[,] originalColors_T = new Color[m_tentacles.Length, 2];
 
@@ -59,5 +66,10 @@ public class EnemyManager : EntityManager
             m_tentacles[i].SetColors(originalColors_T[i, 0], originalColors_T[i, 1]);
         }
         flashing = false;
+    }
+    public override void Kill()
+    {
+        m_movement.StopVel();
+        base.Kill();
     }
 }

@@ -16,9 +16,12 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private float lowHealthThreshhold = 0.1f;
 
     protected bool dead = false;
-    [SerializeField] protected int deathParticleIndex;
-    [SerializeField] protected int lowHealthParticleIndex;
-    [SerializeField] protected float killTime;
+    [SerializeField] protected int deathParticleIndex = 1;
+    [SerializeField] protected int lowHealthParticleIndex = 0;
+    [SerializeField] protected float killTime = 0.5f;
+    [SerializeField] protected float defaultKnockbackDuration = 0.3f;
+    [SerializeField] protected float defaultKnockbackAmount = 4.5f;
+    [SerializeField] protected float deathTentacleSize = 0f;
     public bool testParticles;
 
     public virtual void Start()
@@ -119,29 +122,37 @@ public class EntityManager : MonoBehaviour
     #endregion
 
     //---------------------------------------------------------
+    public virtual void TakeKnockback(Vector2 _dir, float _amount, float _duration)
+    {
+
+    }
+    public virtual void TakeKnockback(Vector2 _dir)
+    {
+        TakeKnockback(_dir, defaultKnockbackAmount, defaultKnockbackDuration);
+    }
     public bool isAlive()
     {
         return !dead;
     }
-
+   
     public virtual void Kill()
     {
         if (dead) return;
         Tentacle[] tentacleArr = GetComponentsInChildren<Tentacle>();
         for (int i = 0; i < tentacleArr.Length; i++)
         {
-            tentacleArr[i].targetDist = 0;
+            tentacleArr[i].targetDist = deathTentacleSize;
         }
         particleControllerRef.StopParticle(lowHealthParticleIndex);
         particleControllerRef.ChangeParent(deathParticleIndex, null);
         particleControllerRef.StartParticle(killTime, deathParticleIndex, RemoveFromScope);
 
-        particleControllerRef.RemoveParticle(deathParticleIndex, -1);
 
         dead = true;
     }
     public virtual void RemoveFromScope()
     {
+        particleControllerRef.RemoveParticle(deathParticleIndex, -1);
         Destroy(gameObject);
         if (EnemyCoordinator.instance != null) EnemyCoordinator.instance.RemoveFromActive(gameObject);
     }

@@ -18,8 +18,14 @@ public class Tentacle : MonoBehaviour
     [SerializeField] private int col1;
     [SerializeField] private int col2;
     private ObjectPaletteManager objPalette;
+    [SerializeField] private Vector3 wiggleAxis = new Vector3(0,0,1);
+    [SerializeField] private Vector3 wiggleOffset;
     void Start()
     {
+        if(wiggleAxis == Vector3.zero)
+        {
+            wiggleAxis.z = 1;
+        }
         if (!TryGetComponent<ObjectPaletteManager>(out objPalette) || !transform.parent.TryGetComponent<ObjectPaletteManager>(out objPalette))
         {
 
@@ -64,7 +70,7 @@ public class Tentacle : MonoBehaviour
         //wiggle function
         if (wiggleMagnitude != 0 && wiggleSpeed != 0)
         {
-            wiggleDir.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude);
+            wiggleDir.localRotation = Quaternion.Euler(Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude * wiggleAxis.x + wiggleOffset.x, Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude * wiggleAxis.y + wiggleOffset.y, Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude * wiggleAxis.z + wiggleOffset.z);
             //-------------------------------------
         }
 

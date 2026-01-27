@@ -21,9 +21,6 @@ public class OrbitalEnemyMovement : EntityMovement
     // Update is called once per frame
     public override void Update()
     {
-
-
-
         UpdateTimer();
         base.Update();
     }

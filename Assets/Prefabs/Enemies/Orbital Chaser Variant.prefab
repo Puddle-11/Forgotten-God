@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1304151514672290231, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1594078497845877027, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: m_movement
+      value: 
+      objectReference: {fileID: 2776647339892834720}
+    - target: {fileID: 2106622350772682733, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2232511022610887274, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3018658060093129057, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.71
@@ -48,9 +64,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3036513257728360557, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3544430451398872394, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
       propertyPath: m_Name
       value: Orbital Chaser Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122889892972628579, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7585965979351861123, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8155031527022386943, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8824969863831169572, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
+      propertyPath: wiggleAxis.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2989993715875643465, guid: 963b77fc15cf0814f943773bdf5224e4, type: 3}
@@ -83,12 +119,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   defaultToPlayer: 1
+  detectionRange: 40
   MinDist: 10
   moveSpeed: 10
   AccelerationSpeed: 0.25
-  nearbyObjects: []
   avoidanceFalloff: 1
   avoidanceStrength: 1
+  knockbackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   lerpDist: 10
   timer: 0
   weight: 0

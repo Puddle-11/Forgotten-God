@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageReceiver : MonoBehaviour
@@ -14,12 +15,32 @@ public class DamageReceiver : MonoBehaviour
         {
             if (ShieldOn == false) {
                 EnMan.UpdateHealth(-ammount);
+                //-----------------------------
+                //Particles
+                //-----------------------------
                 GameObject i = Instantiate(hitParticles);
                 Vector2 dir = HitTransform.right;
                 float angle = Mathf.Atan2(-dir.y, -dir.x) * Mathf.Rad2Deg;
                 i.transform.rotation = Quaternion.Euler(0f, 0f, angle + 90);
                 i.transform.position = transform.position;
-                Destroy(i, 5);
+                ParticleSystem[] pQueryRes = i.GetComponentsInChildren<ParticleSystem>();
+
+                if(pQueryRes.Length > 0) Destroy(i, pQueryRes[0].main.duration);
+                else
+                {
+                    Debug.LogWarning("No ps found using default destroy time");
+                    Destroy(i, 5);
+                }
+                //-----------------------------
+
+                //-----------------------------
+                //Knockback
+                //-----------------------------
+                Vector2 kDir = (Vector2)(HitTransform.right);
+                kDir = kDir.normalized;
+                EnMan.TakeKnockback(kDir);
+
+                //-----------------------------
             }
         }
         else
