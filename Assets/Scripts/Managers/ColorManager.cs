@@ -15,8 +15,11 @@ public class ColorManager : MonoBehaviour
 
     private void Awake()
     {
-        size.x = mainPalette.texture.width;
-        size.y= mainPalette.texture.height;
+        if (mainPalette != null)
+        {
+            size.x = mainPalette.texture.width;
+            size.y = mainPalette.texture.height;
+        }
     }
     private void OnEnable()
     {
